@@ -1,0 +1,37 @@
+version: '3.8'
+
+services:
+  db:
+    image: mysql:8.0
+    container_name: actualite_db
+    environment:
+      MYSQL_ROOT_PASSWORD: secret_root
+      MYSQL_DATABASE: info_actualite
+      MYSQL_USER: actualite_user
+      MYSQL_PASSWORD: secret_pw
+    volumes:
+      - ./bdd/schema.sql:/docker-entrypoint-initdb.d/01-schema.sql:ro
+      - ./bdd/data_seed.sql:/docker-entrypoint-initdb.d/02-data_seed.sql:ro
+    ports:
+      - '3309:3306'
+    healthcheck:
+      test: ['CMD', 'mysqladmin', 'ping', '-h', 'localhost']
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  web:
+    image: php:8.1-apache
+    container_name: actualite_web
+    ports:
+      - '8080:80'
+    depends_on:
+      db:
+        condition: service_healthy
+    volumes:
+      - .:/var/www/html:cached
+    environment:
+      DB_HOST: db
+      DB_NAME: info_actualite
+      DB_USER: actualite_user
+      DB_PASS: secret_pw
