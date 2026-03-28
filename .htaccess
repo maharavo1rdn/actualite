@@ -1,22 +1,32 @@
 Options +FollowSymlinks
 RewriteEngine On
 
-# Canonical redirects for legacy URLs.
+# ═══════════════════════════════════════════════════════════════════
+#  CANONICALS — Redirections 301 des anciens URLs physiques
+# ═══════════════════════════════════════════════════════════════════
+
+# index.php → /
 RewriteCond %{THE_REQUEST} \s/+index\.php\s [NC]
 RewriteRule ^index\.php$ / [R=301,L]
 
+# article.php?s= → /article/*.html
 RewriteCond %{THE_REQUEST} \s/+pages/articles/article\.php\?s=([^&\s]+) [NC]
 RewriteRule ^pages/articles/article\.php$ /article/%1.html? [R=301,L,NE]
 
+# Auth
 RewriteCond %{THE_REQUEST} \s/+pages/users/login\.php\s [NC]
 RewriteRule ^pages/users/login\.php$ /connexion [R=301,L]
 
 RewriteCond %{THE_REQUEST} \s/+pages/users/logout\.php\s [NC]
 RewriteRule ^pages/users/logout\.php$ /deconnexion [R=301,L]
 
-RewriteCond %{THE_REQUEST} \s/+pages/articles/backoffice_articles\.php\s [NC]
-RewriteRule ^pages/articles/backoffice_articles\.php$ /backoffice [R=301,L]
+RewriteCond %{THE_REQUEST} \s/+controllers/traitement_login\.php\s [NC]
+RewriteRule ^controllers/traitement_login\.php$ /auth/login [R=301,L]
 
+RewriteCond %{THE_REQUEST} \s/+controllers/traitement_logout\.php\s [NC]
+RewriteRule ^controllers/traitement_logout\.php$ /deconnexion [R=301,L]
+
+# Chronologie
 RewriteCond %{THE_REQUEST} \s/+pages/articles/backoffice_evenements_chronologie\.php\?article_id=([0-9]+)\s [NC]
 RewriteRule ^pages/articles/backoffice_evenements_chronologie\.php$ /backoffice/chronologie/article-%1? [R=301,L]
 
@@ -29,38 +39,69 @@ RewriteRule ^pages/articles/backoffice_evenements_chronologie_form\.php$ /backof
 RewriteCond %{THE_REQUEST} \s/+pages/articles/backoffice_evenements_chronologie\.php\s [NC]
 RewriteRule ^pages/articles/backoffice_evenements_chronologie\.php$ /backoffice/chronologie [R=301,L]
 
-RewriteCond %{THE_REQUEST} \s/+controllers/traitement_login\.php\s [NC]
-RewriteRule ^controllers/traitement_login\.php$ /auth/login [R=301,L]
-
-RewriteCond %{THE_REQUEST} \s/+controllers/traitement_logout\.php\s [NC]
-RewriteRule ^controllers/traitement_logout\.php$ /deconnexion [R=301,L]
-
 RewriteCond %{THE_REQUEST} \s/+controllers/traitement_evenements_chronologie\.php\s [NC]
 RewriteRule ^controllers/traitement_evenements_chronologie\.php$ /backoffice/chronologie/traitement [R=301,L]
 
-# Keep static assets and existing files/directories untouched.
+# Articles backoffice
+RewriteCond %{THE_REQUEST} \s/+pages/articles/backoffice_articles\.php\s [NC]
+RewriteRule ^pages/articles/backoffice_articles\.php$ /backoffice/articles [R=301,L]
+
+RewriteCond %{THE_REQUEST} \s/+pages/articles/backoffice_articles_form\.php\?id=([0-9]+)\s [NC]
+RewriteRule ^pages/articles/backoffice_articles_form\.php$ /backoffice/articles/edit-%1? [R=301,L]
+
+RewriteCond %{THE_REQUEST} \s/+pages/articles/backoffice_articles_form\.php\s [NC]
+RewriteRule ^pages/articles/backoffice_articles_form\.php$ /backoffice/articles/nouveau [R=301,L]
+
+RewriteCond %{THE_REQUEST} \s/+pages/articles/backoffice_sources\.php\s [NC]
+RewriteRule ^pages/articles/backoffice_sources\.php$ /backoffice/sources [R=301,L]
+
+RewriteCond %{THE_REQUEST} \s/+controllers/traitement_articles\.php\s [NC]
+RewriteRule ^controllers/traitement_articles\.php$ /backoffice/articles/traitement [R=301,L]
+
+# ═══════════════════════════════════════════════════════════════════
+#  Fichiers et dossiers réels → servis directement (assets, etc.)
+# ═══════════════════════════════════════════════════════════════════
 RewriteCond %{REQUEST_FILENAME} -f [OR]
 RewriteCond %{REQUEST_FILENAME} -d
 RewriteRule ^ - [L]
 
-# Front routes.
-RewriteRule ^$ index.php [L,QSA]
-RewriteRule ^accueil/?$ index.php [L,QSA]
-RewriteRule ^actualites/?$ index.php [L,QSA]
-RewriteRule ^categorie/([_a-zA-Z0-9-]+)/?$ index.php?cat_slug=$1 [L,QSA]
-RewriteRule ^article/([_a-zA-Z0-9-]+)\.html$ pages/articles/article.php?s=$1 [L,QSA]
+# ═══════════════════════════════════════════════════════════════════
+#  FRONT ROUTES
+# ═══════════════════════════════════════════════════════════════════
+RewriteRule ^$                                    index.php [L,QSA]
+RewriteRule ^accueil/?$                           index.php [L,QSA]
+RewriteRule ^actualites/?$                        index.php [L,QSA]
+RewriteRule ^categorie/([_a-zA-Z0-9-]+)/?$        index.php?cat_slug=$1 [L,QSA]
+RewriteRule ^article/([_a-zA-Z0-9-]+)\.html$      pages/articles/article.php?s=$1 [L,QSA]
 
-# Auth routes.
-RewriteRule ^connexion/?$ pages/users/login.php [L,QSA]
-RewriteRule ^deconnexion/?$ controllers/traitement_logout.php [L,QSA]
-RewriteRule ^logout/?$ controllers/traitement_logout.php [L,QSA]
-RewriteRule ^auth/login/?$ controllers/traitement_login.php [L,QSA]
+# ═══════════════════════════════════════════════════════════════════
+#  AUTH ROUTES
+# ═══════════════════════════════════════════════════════════════════
+RewriteRule ^connexion/?$                         pages/users/login.php [L,QSA]
+RewriteRule ^deconnexion/?$                       controllers/traitement_logout.php [L,QSA]
+RewriteRule ^logout/?$                            controllers/traitement_logout.php [L,QSA]
+RewriteRule ^auth/login/?$                        controllers/traitement_login.php [L,QSA]
 
-# Backoffice routes.
-RewriteRule ^backoffice/?$ pages/articles/backoffice_articles.php [L,QSA]
-RewriteRule ^backoffice/chronologie/?$ pages/articles/backoffice_evenements_chronologie.php [L,QSA]
-RewriteRule ^backoffice/chronologie/article-([0-9]+)/?$ pages/articles/backoffice_evenements_chronologie.php?article_id=$1 [L,QSA]
-RewriteRule ^backoffice/chronologie/ajout/?$ pages/articles/backoffice_evenements_chronologie_form.php [L,QSA]
-RewriteRule ^backoffice/chronologie/ajout/article-([0-9]+)/?$ pages/articles/backoffice_evenements_chronologie_form.php?article_id=$1 [L,QSA]
-RewriteRule ^backoffice/chronologie/edit-([0-9]+)/?$ pages/articles/backoffice_evenements_chronologie_form.php?edit_id=$1 [L,QSA]
-RewriteRule ^backoffice/chronologie/traitement/?$ controllers/traitement_evenements_chronologie.php [L,QSA]
+# ═══════════════════════════════════════════════════════════════════
+#  BACKOFFICE ROUTES
+# ═══════════════════════════════════════════════════════════════════
+
+# Chronologie
+RewriteRule ^backoffice/chronologie/?$                          pages/articles/backoffice_evenements_chronologie.php [L,QSA]
+RewriteRule ^backoffice/chronologie/article-([0-9]+)/?$         pages/articles/backoffice_evenements_chronologie.php?article_id=$1 [L,QSA]
+RewriteRule ^backoffice/chronologie/ajout/?$                    pages/articles/backoffice_evenements_chronologie_form.php [L,QSA]
+RewriteRule ^backoffice/chronologie/ajout/article-([0-9]+)/?$   pages/articles/backoffice_evenements_chronologie_form.php?article_id=$1 [L,QSA]
+RewriteRule ^backoffice/chronologie/edit-([0-9]+)/?$            pages/articles/backoffice_evenements_chronologie_form.php?edit_id=$1 [L,QSA]
+RewriteRule ^backoffice/chronologie/traitement/?$               controllers/traitement_evenements_chronologie.php [L,QSA]
+
+# Articles
+RewriteRule ^backoffice/articles/?$                             pages/articles/backoffice_articles.php [L,QSA]
+RewriteRule ^backoffice/articles/nouveau/?$                     pages/articles/backoffice_articles_form.php [L,QSA]
+RewriteRule ^backoffice/articles/edit-([0-9]+)/?$               pages/articles/backoffice_articles_form.php?id=$1 [L,QSA]
+RewriteRule ^backoffice/articles/traitement/?$                  controllers/traitement_articles.php [L,QSA]
+
+# Sources
+RewriteRule ^backoffice/sources/?$                              pages/articles/backoffice_sources.php [L,QSA]
+
+# Racine backoffice → liste articles (point d'entrée principal)
+RewriteRule ^backoffice/?$                                      pages/articles/backoffice_articles.php [L,QSA]
