@@ -2,16 +2,19 @@
 
 require_once __DIR__ . '/../services/AuthService.php';
 require_once __DIR__ . '/../services/ArticleService.php';
+require_once __DIR__ . '/../services/EventChronologyService.php';
 
 class AuthController
 {
     private $authService;
     private $articleService;
+    private $eventChronologyService;
 
     public function __construct()
     {
         $this->authService = new AuthService();
         $this->articleService = new ArticleService();
+        $this->eventChronologyService = new EventChronologyService();
     }
 
     public function handleLogin(): void
@@ -42,7 +45,7 @@ class AuthController
             'id_role' => $user['id_role'],
         ];
 
-        header('Location: ../pages/articles/backoffice.php');
+        header('Location: ../pages/articles/backoffice_articles.php');
         exit;
     }
 
@@ -78,5 +81,30 @@ class AuthController
     public function removeArticle(int $id): bool
     {
         return $this->articleService->deleteArticle($id);
+    }
+
+    public function listChronologyEvents(): array
+    {
+        return $this->eventChronologyService->getAllEvents();
+    }
+
+    public function getChronologyEvent(int $id): ?array
+    {
+        return $this->eventChronologyService->getEventById($id);
+    }
+
+    public function createChronologyEvent(array $data): bool
+    {
+        return $this->eventChronologyService->addEvent($data);
+    }
+
+    public function updateChronologyEvent(array $data): bool
+    {
+        return $this->eventChronologyService->updateEvent($data);
+    }
+
+    public function removeChronologyEvent(int $id): bool
+    {
+        return $this->eventChronologyService->deleteEvent($id);
     }
 }

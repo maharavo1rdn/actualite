@@ -1,131 +1,190 @@
 <?php
-// Simulation des données qui proviendraient de ta base de données
-$article = [
-    'titre' => "L'impact du blocus sur le détroit d'Ormuz",
-    'categorie' => "Géopolitique",
-    'date' => "15 Mars 2026",
-    'image' => "https://images.unsplash.com/photo-1517059224940-d4af9eec41b7?auto=format&fit=crop&w=1200&q=80",
-    'contenu' => "Le détroit d'Ormuz est l'un des points de passage les plus stratégiques au monde pour le commerce maritime de l'énergie... <br><br> Selon les analystes, une fermeture prolongée pourrait entraîner une hausse sans précédent du prix du baril de pétrole brut sur les marchés mondiaux."
+
+require_once __DIR__ . '/services/ArticleService.php';
+
+$articleService = new ArticleService();
+
+$categories = $articleService->getCategories();
+$selectedCategoryId = isset($_GET['cat']) ? intval($_GET['cat']) : null;
+
+if ($selectedCategoryId !== null && $selectedCategoryId <= 0) {
+    $selectedCategoryId = null;
+}
+
+$featuredArticle = $articleService->getFeaturedArticle($selectedCategoryId);
+$recentArticles = $articleService->getRecentArticles(9, $featuredArticle ? 1 : 0, $selectedCategoryId);
+$liveEvents = $articleService->getLiveEvents(10);
+
+$categoryColors = [
+    'Geopolitique' => 'bg-red-700',
+    'Humanitaire' => 'bg-emerald-700',
+    'Economie' => 'bg-amber-600',
+    'Climat' => 'bg-cyan-700',
 ];
 
-$sources = [
-    ['nom' => 'Agence France-Presse', 'type' => 'Officiel', 'url' => '#'],
-    ['nom' => 'Al Jazeera', 'type' => 'Média', 'url' => '#'],
-    ['nom' => 'Rapport ONU n°42', 'type' => 'Document', 'url' => '#']
-];
+function normalizeCategoryName(string $value): string
+{
+    $ascii = iconv('UTF-8', 'ASCII//TRANSLIT//IGNORE', $value);
+    return $ascii !== false ? $ascii : $value;
+}
 
-$timeline = [
-    ['heure' => '10:30', 'texte' => 'Nouveau communiqué du Pentagone.'],
-    ['heure' => '09:15', 'texte' => "Impact confirmé au sud d'Ispahan."],
-    ['heure' => '06:00', 'texte' => 'Début des mouvements de troupes au front.']
-];
+function categoryBadgeClass(array $categoryColors, string $categoryName): string
+{
+    $normalized = normalizeCategoryName($categoryName);
+    return $categoryColors[$normalized] ?? 'bg-slate-700';
+}
+
+function formatDateFr(string $dateInput): string
+{
+    $timestamp = strtotime($dateInput);
+    if ($timestamp === false) {
+        return $dateInput;
+    }
+
+    $months = [
+        1 => 'janvier',
+        2 => 'fevrier',
+        3 => 'mars',
+        4 => 'avril',
+        5 => 'mai',
+        6 => 'juin',
+        7 => 'juillet',
+        8 => 'aout',
+        9 => 'septembre',
+        10 => 'octobre',
+        11 => 'novembre',
+        12 => 'decembre',
+    ];
+
+    $day = date('d', $timestamp);
+    $month = $months[intval(date('n', $timestamp))] ?? date('m', $timestamp);
+    $year = date('Y', $timestamp);
+    $hour = date('H:i', $timestamp);
+
+    return $day . ' ' . $month . ' ' . $year . ' a ' . $hour;
+}
+
+function excerptFromHtml(string $html, int $length = 150): string
+{
+    $text = trim(preg_replace('/\s+/', ' ', strip_tags($html)) ?? '');
+    if ($text === '') {
+        return '';
+    }
+
+    if (function_exists('mb_strlen') && function_exists('mb_substr')) {
+        if (mb_strlen($text) <= $length) {
+            return $text;
+        }
+        return rtrim(mb_substr($text, 0, $length)) . '...';
+    }
+
+    if (strlen($text) <= $length) {
+        return $text;
+    }
+
+    return rtrim(substr($text, 0, $length)) . '...';
+}
 ?>
-
 <!DOCTYPE html>
 <html lang="fr">
 
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title><?php echo $article['titre']; ?> - Info Actualité</title>
+    <title>Info Iran - Actualites</title>
     <script src="https://cdn.tailwindcss.com"></script>
 </head>
 
-<body class="bg-gray-50 text-gray-900 font-sans">
-
-    <header class="bg-black text-white p-4 sticky top-0 z-50 shadow-md">
-        <div class="container mx-auto flex justify-between items-center">
-            <h1 class="text-2xl font-bold tracking-tighter uppercase">Info <span class="text-red-600">Actualité</span></h1>
-            <nav class="hidden md:flex space-x-6 text-sm font-semibold items-center">
-                <a href="#" class="hover:text-red-500 uppercase">Analyses</a>
-                <a href="#" class="hover:text-red-500 uppercase">Direct</a>
-                <a href="#" class="hover:text-red-500 uppercase">Cartes</a>
-                <a href="pages/users/login.php" class="bg-white text-black px-3 py-1 rounded border border-gray-300 hover:bg-gray-100 uppercase">Connexion</a>
-            </nav>
+<body class="bg-slate-100 text-slate-900 font-sans">
+    <header class="bg-slate-950 text-white sticky top-0 z-50">
+        <div class="max-w-7xl mx-auto px-4 py-4 flex items-center justify-between gap-4">
+            <a href="index.php" class="font-black tracking-wide text-lg uppercase">Info <span class="text-red-500">Iran</span></a>
+            <form action="index.php" method="get" class="hidden md:flex flex-1 max-w-xl">
+                <?php if ($selectedCategoryId): ?>
+                    <input type="hidden" name="cat" value="<?= intval($selectedCategoryId) ?>">
+                <?php endif; ?>
+                <input type="text" name="q" placeholder="Recherche rapide" class="w-full px-3 py-2 rounded-l bg-slate-800 border border-slate-700 focus:outline-none">
+                <button type="submit" class="px-4 py-2 bg-red-600 rounded-r font-semibold">Rechercher</button>
+            </form>
+            <a href="pages/users/login.php" class="text-sm bg-white text-slate-900 px-3 py-2 rounded font-semibold">Connexion</a>
         </div>
+        <nav class="border-t border-slate-800">
+            <div class="max-w-7xl mx-auto px-4 py-3 flex flex-wrap gap-2 text-sm font-semibold uppercase">
+                <a href="index.php" class="px-3 py-1 rounded <?= $selectedCategoryId === null ? 'bg-red-600 text-white' : 'bg-slate-800 text-slate-200' ?>">Tout</a>
+                <?php foreach ($categories as $category): ?>
+                    <?php $catId = intval($category['id']); ?>
+                    <a href="index.php?cat=<?= $catId ?>" class="px-3 py-1 rounded <?= $selectedCategoryId === $catId ? 'bg-red-600 text-white' : 'bg-slate-800 text-slate-200' ?>">
+                        <?= htmlspecialchars($category['nom']) ?>
+                    </a>
+                <?php endforeach; ?>
+            </div>
+        </nav>
     </header>
 
-    <main class="container mx-auto mt-8 px-4 lg:px-0">
-        <div class="flex flex-wrap lg:flex-nowrap gap-8">
-
-            <article class="w-full lg:w-3/4 bg-white p-6 rounded shadow-sm">
-
-                <header class="mb-8">
-                    <span class="text-red-600 font-bold uppercase text-sm tracking-widest"><?php echo $article['categorie']; ?></span>
-                    <h1 class="text-4xl md:text-5xl font-extrabold mt-2 leading-tight"><?php echo $article['titre']; ?></h1>
-                    <p class="text-gray-500 mt-4 text-sm italic">
-                        Publié le <?php echo $article['date']; ?> | Par la Rédaction
-                    </p>
-                    <div class="mt-6">
-                        <img src="<?php echo $article['image']; ?>" alt="Couverture" class="w-full h-[400px] object-cover rounded-lg">
-                    </div>
-                </header>
-
-                <section class="prose prose-lg max-w-none text-gray-800 leading-relaxed border-b pb-8">
-                    <p class="mb-4 font-semibold text-xl text-gray-700">
-                        Résumé de la situation : Les tensions montent d'un cran suite aux récents évènements dans le Golfe.
-                    </p>
-                    <p>
-                        <?php echo $article['contenu']; ?>
-                    </p>
-                </section>
-
-                <footer class="mt-8 bg-gray-100 p-6 rounded-lg">
-                    <h3 class="text-lg font-bold mb-4 flex items-center">
-                        <svg class="w-5 h-5 mr-2" fill="currentColor" viewBox="0 0 20 20">
-                            <path d="M9 2a1 1 0 000 2h2a1 1 0 100-2H9z"></path>
-                            <path fill-rule="evenodd" d="M4 5a2 2 0 012-2 3 3 0 003 3h2a3 3 0 003-3 2 2 0 012 2v11a2 2 0 01-2 2H6a2 2 0 01-2-2V5zm3 4a1 1 0 000 2h.01a1 1 0 100-2H7zm3 0a1 1 0 000 2h3a1 1 0 100-2h-3zm-3 4a1 1 0 100 2h.01a1 1 0 100-2H7zm3 0a1 1 0 100 2h3a1 1 0 100-2h-3z" clip-rule="evenodd"></path>
-                        </svg>
-                        Sources & Vérification
-                    </h3>
-                    <ul class="grid grid-cols-1 md:grid-cols-2 gap-4">
-                        <?php foreach ($sources as $source): ?>
-                            <li class="flex items-center space-x-2 bg-white p-3 rounded border">
-                                <span class="bg-gray-200 text-[10px] px-2 py-1 rounded uppercase font-bold"><?php echo $source['type']; ?></span>
-                                <a href="<?php echo $source['url']; ?>" class="text-blue-600 hover:underline font-medium"><?php echo $source['nom']; ?></a>
-                            </li>
-                        <?php endforeach; ?>
-                    </ul>
-                </footer>
-            </article>
-
-            <aside class="w-full lg:w-1/4">
-                <div class="bg-white p-5 rounded shadow-sm sticky top-24">
-                    <h3 class="text-xl font-bold mb-6 flex items-center text-red-600">
-                        <span class="relative flex h-3 w-3 mr-3">
-                            <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-red-400 opacity-75"></span>
-                            <span class="relative inline-flex rounded-full h-3 w-3 bg-red-600"></span>
-                        </span>
-                        EN DIRECT
-                    </h3>
-
-                    <div class="relative border-l-2 border-gray-200 ml-3 space-y-8">
-                        <?php foreach ($timeline as $event): ?>
-                            <div class="mb-2 ml-6">
-                                <span class="absolute -left-[9px] mt-1.5 h-4 w-4 rounded-full bg-white border-2 border-red-600"></span>
-                                <time class="text-xs font-bold text-gray-500 uppercase"><?php echo $event['heure']; ?></time>
-                                <p class="text-sm font-medium text-gray-800 leading-tight mt-1">
-                                    <?php echo $event['texte']; ?>
-                                </p>
-                            </div>
-                        <?php endforeach; ?>
-                    </div>
-
-                    <button class="w-full mt-6 bg-gray-900 text-white py-2 rounded text-sm font-bold hover:bg-black transition">
-                        Voir toute la chronologie
-                    </button>
+    <main class="max-w-7xl mx-auto px-4 py-6">
+        <?php if ($featuredArticle): ?>
+            <section class="relative overflow-hidden rounded-2xl shadow-lg mb-8 min-h-[22rem]">
+                <img src="<?= htmlspecialchars($featuredArticle['image_url'] ?? 'https://images.unsplash.com/photo-1504711434969-e33886168f5c?auto=format&fit=crop&w=1600&q=80') ?>" alt="Image a la une" class="absolute inset-0 w-full h-full object-cover">
+                <div class="absolute inset-0 bg-gradient-to-t from-slate-950 via-slate-900/60 to-transparent"></div>
+                <div class="relative z-10 p-6 md:p-10 text-white h-full flex flex-col justify-end gap-3">
+                    <span class="inline-block px-3 py-1 text-xs font-bold uppercase rounded w-fit <?= categoryBadgeClass($categoryColors, $featuredArticle['categorie_nom'] ?? 'A la une') ?>">
+                        <?= htmlspecialchars($featuredArticle['categorie_nom'] ?? 'A la une') ?>
+                    </span>
+                    <div class="text-3xl md:text-5xl font-black leading-tight"><?= $featuredArticle['titre'] ?></div>
+                    <p class="text-sm md:text-base text-slate-100">Publie le <?= htmlspecialchars(formatDateFr($featuredArticle['date_publication'])) ?></p>
+                    <a href="pages/articles/article.php?s=<?= urlencode($featuredArticle['slug']) ?>" class="inline-flex items-center gap-2 text-sm md:text-base font-bold underline underline-offset-4">
+                        Lire l'analyse complete
+                    </a>
                 </div>
-            </aside>
+            </section>
+        <?php endif; ?>
 
+        <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+            <section class="lg:col-span-2 bg-white rounded-2xl shadow p-5 md:p-6">
+                <h2 class="text-2xl font-black mb-5 uppercase tracking-tight">Les Dernieres Actualites</h2>
+
+                <?php if (empty($recentArticles)): ?>
+                    <p class="text-slate-600">Aucun article disponible pour le filtre actuel.</p>
+                <?php else: ?>
+                    <div class="grid sm:grid-cols-2 xl:grid-cols-3 gap-4">
+                        <?php foreach ($recentArticles as $article): ?>
+                            <article class="border border-slate-200 rounded-xl overflow-hidden bg-white hover:shadow transition-shadow">
+                                <img src="<?= htmlspecialchars($article['image_url'] ?? 'https://images.unsplash.com/photo-1585829365295-ab7cd400c167?auto=format&fit=crop&w=900&q=80') ?>" alt="Miniature article" class="w-full h-36 object-cover">
+                                <div class="p-4 space-y-2">
+                                    <span class="inline-block text-[11px] uppercase font-bold px-2 py-1 rounded text-white <?= categoryBadgeClass($categoryColors, $article['categorie_nom'] ?? 'Actualite') ?>">
+                                        <?= htmlspecialchars($article['categorie_nom'] ?? 'Actualite') ?>
+                                    </span>
+                                    <a href="pages/articles/article.php?s=<?= urlencode($article['slug']) ?>" class="block text-base font-bold leading-snug hover:text-red-700">
+                                        <?= strip_tags($article['titre']) ?>
+                                    </a>
+                                    <p class="text-sm text-slate-600"><?= htmlspecialchars(excerptFromHtml($article['contenu'], 150)) ?></p>
+                                </div>
+                            </article>
+                        <?php endforeach; ?>
+                    </div>
+                <?php endif; ?>
+            </section>
+
+            <aside class="bg-slate-950 text-slate-100 rounded-2xl shadow p-5 md:p-6">
+                <h2 class="text-xl font-black uppercase tracking-tight mb-5 text-red-400">Le Fil Du Direct</h2>
+                <?php if (empty($liveEvents)): ?>
+                    <p class="text-slate-300">Aucun evenement de chronologie pour le moment.</p>
+                <?php else: ?>
+                    <div class="space-y-4">
+                        <?php foreach ($liveEvents as $event): ?>
+                            <article class="border-l-2 border-red-500 pl-3">
+                                <p class="text-xs font-bold text-slate-300"><?= htmlspecialchars(date('H:i', strtotime($event['date_evenement']))) ?></p>
+                                <div class="text-sm leading-snug"><?= $event['description_courte'] ?></div>
+                                <?php if (!empty($event['article_slug'])): ?>
+                                    <a href="pages/articles/article.php?s=<?= urlencode($event['article_slug']) ?>" class="text-xs text-red-300 underline underline-offset-2">Article lie</a>
+                                <?php endif; ?>
+                            </article>
+                        <?php endforeach; ?>
+                    </div>
+                <?php endif; ?>
+            </aside>
         </div>
     </main>
-
-    <footer class="bg-gray-900 text-gray-400 py-10 mt-12">
-        <div class="container mx-auto text-center text-sm">
-            <p>&copy; 2026 Info Actualité - Tous droits réservés.</p>
-        </div>
-    </footer>
-
 </body>
 
 </html>

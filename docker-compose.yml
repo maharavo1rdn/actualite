@@ -1,4 +1,3 @@
-version: '3.8'
 services:
   db:
     image: mysql:8.0
@@ -8,6 +7,8 @@ services:
       MYSQL_DATABASE: info_actualite
       MYSQL_USER: actualite_user
       MYSQL_PASSWORD: secret_pw
+      MYSQL_INITDB_ARGS: "--character-set-server=utf8mb4 --collation-server=utf8mb4_unicode_ci"
+    command: --character-set-server=utf8mb4 --collation-server=utf8mb4_unicode_ci
     volumes:
       - ./bdd/schema.sql:/docker-entrypoint-initdb.d/01-schema.sql:ro
       - ./bdd/data_seed.sql:/docker-entrypoint-initdb.d/02-data_seed.sql:ro
