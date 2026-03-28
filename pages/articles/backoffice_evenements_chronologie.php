@@ -44,80 +44,126 @@ if ($selectedArticleId > 0) {
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Backoffice Chronologie - Info Actualite</title>
     <script src="/assets/js/tailwind.js"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <!-- Geist Sans (clean, neutral, great for UI) + Geist Mono (code-like, crisp) -->
+    <link href="https://fonts.googleapis.com/css2?family=Geist:wght@400;500;600&family=Geist+Mono:wght@400;500&display=swap" rel="stylesheet">
+    <style>
+        body  { font-family: 'Geist', sans-serif; font-size: 15px; }
+        .mono { font-family: 'Geist Mono', monospace; }
+    </style>
 </head>
 <body class="bg-gray-100 min-h-screen">
-    <header class="bg-black text-white p-4">
-        <div class="container mx-auto flex justify-between items-center">
-            <h1 class="text-xl font-bold">Backoffice Chronologie - Info Actualite</h1>
-            <div class="flex items-center gap-2 flex-wrap justify-end">
-                <a href="/backoffice" class="bg-blue-600 px-3 py-1 rounded hover:bg-blue-700">Liste des articles</a>
-                <span class="mr-4">Connecte en tant que <strong><?= $username ?></strong></span>
-                <a href="/deconnexion" class="bg-red-600 px-3 py-1 rounded hover:bg-red-700">Deconnexion</a>
+
+    <header class="bg-black text-white sticky top-0 z-10">
+        <div class="container mx-auto px-6 h-14 flex items-center justify-between gap-4">
+            <span class="mono text-sm tracking-tight">Info Actualite / <span class="text-gray-400">chronologie</span></span>
+            <div class="flex items-center gap-4">
+                <a href="/backoffice" class="mono text-sm bg-gray-800 hover:bg-gray-700 px-3 py-1.5 rounded transition-colors">← articles</a>
+                <span class="mono text-sm text-gray-500"><?= $username ?></span>
+                <a href="/deconnexion" class="mono text-sm text-red-400 hover:text-red-300 transition-colors">déconnexion</a>
             </div>
         </div>
     </header>
-    <main class="container mx-auto p-6">
-        <h2 class="text-2xl font-bold mb-4">Administration de la chronologie</h2>
-        <?php if ($selectedArticleId > 0): ?>
-            <p class="mb-3 text-sm text-blue-800 bg-blue-100 border border-blue-300 rounded p-2">
-                Filtre actif: article #<?= $selectedArticleId ?>.
-                <a href="/backoffice/chronologie" class="underline">Retirer le filtre</a>
-            </p>
-        <?php endif; ?>
-        <p class="mb-6 text-gray-700">Les champs Titre et Description acceptent du HTML brut Tiny Docs (exemples: &lt;h1&gt;...&lt;/h1&gt;, &lt;p&gt;...&lt;/p&gt;). Ces balises sont enregistrees telles quelles en base.</p>
 
+    <main class="container mx-auto px-6 py-10 max-w-5xl">
+
+        <!-- Title row -->
+        <div class="flex items-start justify-between gap-4 mb-7">
+            <div>
+                <h1 class="text-3xl font-semibold text-gray-900 tracking-tight">Chronologie</h1>
+                <p class="mono text-sm text-gray-400 mt-1"><?= count($events) ?> événement<?= count($events) !== 1 ? 's' : '' ?></p>
+            </div>
+            <a href="<?= htmlspecialchars($createUrl) ?>" class="flex items-center gap-2 bg-black text-white text-sm font-medium px-4 py-2.5 rounded hover:bg-gray-800 transition-colors whitespace-nowrap">
+                + Ajouter un événement
+            </a>
+        </div>
+
+        <!-- Filter -->
+        <?php if ($selectedArticleId > 0): ?>
+            <div class="flex items-center justify-between gap-3 bg-blue-50 border border-blue-200 rounded-lg px-4 py-3 mb-4 text-sm text-blue-700">
+                <span>Filtre actif — article <span class="mono">#<?= $selectedArticleId ?></span></span>
+                <a href="/backoffice/chronologie" class="mono text-xs underline hover:no-underline">retirer le filtre</a>
+            </div>
+        <?php endif; ?>
+
+        <!-- HTML hint -->
+        <div class="bg-amber-50 border border-amber-200 rounded-lg px-4 py-3 mb-7 mono text-sm text-amber-700">
+            Titre &amp; Description acceptent du HTML brut Tiny Docs —
+            <code class="bg-amber-100 px-1.5 py-0.5 rounded">&lt;h1&gt;</code>
+            <code class="bg-amber-100 px-1.5 py-0.5 rounded">&lt;p&gt;</code> etc.
+        </div>
+
+        <!-- Flash -->
         <?php if ($flash): ?>
-            <div class="mb-6 p-3 rounded border <?= $flash['type'] === 'success' ? 'bg-green-100 text-green-800 border-green-300' : 'bg-red-100 text-red-800 border-red-300' ?>">
+            <div class="mb-7 px-4 py-3 rounded-lg border mono text-sm
+                <?= $flash['type'] === 'success' ? 'bg-green-50 border-green-200 text-green-800' : 'bg-red-50 border-red-200 text-red-800' ?>">
                 <?= htmlspecialchars($flash['message']) ?>
             </div>
         <?php endif; ?>
 
-        <section class="bg-white p-6 rounded shadow">
-            <div class="flex items-center justify-between gap-3 mb-4">
-                <h3 class="text-xl font-semibold">Liste des evenements</h3>
-                <a href="<?= htmlspecialchars($createUrl) ?>" class="bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700 text-sm">Ajouter un evenement</a>
-            </div>
+        <!-- Events table -->
+        <div class="bg-white border border-gray-200 rounded-xl overflow-hidden">
 
             <?php if (empty($events)): ?>
-                <p class="text-gray-600">Aucun evenement dans la chronologie.</p>
-            <?php else: ?>
-                <div class="space-y-4">
-                    <?php foreach ($events as $event): ?>
-                        <article class="border rounded p-4">
-                            <div class="flex flex-col md:flex-row md:items-start md:justify-between gap-3">
-                                <div class="flex-1">
-                                    <p class="text-xs text-gray-500 mb-1">#<?= intval($event['id']) ?> - <?= htmlspecialchars($event['date_evenement']) ?></p>
-                                    <div class="prose max-w-none mb-2"><?= $event['titre_evenement'] ?></div>
-                                    <div class="prose max-w-none text-sm text-gray-700"><?= $event['description_courte'] ?></div>
-                                    <p class="text-xs text-gray-500 mt-2">
-                                        Article lie:
-                                        <?php
-                                        $linkedArticleId = $event['id_article'] ? intval($event['id_article']) : null;
-                                        if ($linkedArticleId && isset($articlesById[$linkedArticleId])) {
-                                            echo '#' . $linkedArticleId . ' - ' . htmlspecialchars($articlesById[$linkedArticleId]['slug']);
-                                        } else {
-                                            echo 'Aucun';
-                                        }
-                                        ?>
-                                    </p>
-                                </div>
-
-                                <div class="flex gap-2">
-                                    <a href="/backoffice/chronologie/edit-<?= intval($event['id']) ?><?= $selectedArticleId > 0 ? '?article_id=' . $selectedArticleId : '' ?>" class="bg-yellow-500 text-white px-3 py-2 rounded hover:bg-yellow-600">Modifier</a>
-
-                                    <form action="/backoffice/chronologie/traitement" method="post" onsubmit="return confirm('Supprimer cet evenement ?');">
-                                        <input type="hidden" name="action" value="delete">
-                                        <input type="hidden" name="id" value="<?= intval($event['id']) ?>">
-                                        <input type="hidden" name="article_id_context" value="<?= $selectedArticleId > 0 ? $selectedArticleId : 0 ?>">
-                                        <button type="submit" class="bg-red-600 text-white px-3 py-2 rounded hover:bg-red-700">Supprimer</button>
-                                    </form>
-                                </div>
-                            </div>
-                        </article>
-                    <?php endforeach; ?>
+                <div class="px-6 py-20 text-center mono text-base text-gray-400">
+                    Aucun événement dans la chronologie.
                 </div>
+            <?php else: ?>
+
+                <!-- Column headers -->
+                <div class="grid grid-cols-[140px_1fr_auto] gap-x-6 px-6 py-3 bg-gray-50 border-b border-gray-200 mono text-xs text-gray-400 uppercase tracking-widest">
+                    <span>Date</span>
+                    <span>Événement</span>
+                    <span>Actions</span>
+                </div>
+
+                <?php foreach ($events as $i => $event):
+                    $linkedArticleId = $event['id_article'] ? intval($event['id_article']) : null;
+                ?>
+                    <div class="grid grid-cols-[140px_1fr_auto] gap-x-6 items-start px-6 py-5
+                        <?= $i % 2 === 1 ? 'bg-gray-50/60' : 'bg-white' ?>
+                        border-b border-gray-100 last:border-b-0 hover:bg-blue-50/30 transition-colors">
+
+                        <!-- Date + ID -->
+                        <div class="pt-0.5">
+                            <span class="mono text-sm text-gray-600 leading-snug"><?= htmlspecialchars($event['date_evenement']) ?></span>
+                        </div>
+
+                        <!-- Content -->
+                        <div class="min-w-0">
+                            <div class="text-base font-semibold text-gray-900 leading-snug mb-1.5"><?= $event['titre_evenement'] ?></div>
+                            <div class="text-sm text-gray-500 leading-relaxed mb-3"><?= $event['description_courte'] ?></div>
+                            <span class="inline-flex items-center mono text-xs text-gray-400 bg-gray-100 px-2.5 py-1 rounded-md">
+                                <?php if ($linkedArticleId && isset($articlesById[$linkedArticleId])): ?>
+                                    article / <?= htmlspecialchars($articlesById[$linkedArticleId]['slug']) ?>
+                                <?php else: ?>
+                                    sans article
+                                <?php endif; ?>
+                            </span>
+                        </div>
+
+                        <!-- Actions -->
+                        <div class="flex items-center gap-2 pt-0.5">
+                            <a href="/backoffice/chronologie/edit-<?= intval($event['id']) ?><?= $selectedArticleId > 0 ? '?article_id=' . $selectedArticleId : '' ?>"
+                               class="mono text-sm text-gray-600 bg-gray-100 hover:bg-gray-200 px-3.5 py-2 rounded-lg transition-colors">
+                                Modifier
+                            </a>
+                            <form action="/backoffice/chronologie/traitement" method="post" onsubmit="return confirm('Supprimer cet evenement ?');">
+                                <input type="hidden" name="action" value="delete">
+                                <input type="hidden" name="id" value="<?= intval($event['id']) ?>">
+                                <input type="hidden" name="article_id_context" value="<?= $selectedArticleId > 0 ? $selectedArticleId : 0 ?>">
+                                <button type="submit" class="mono text-sm text-red-500 bg-red-50 hover:bg-red-100 px-3.5 py-2 rounded-lg transition-colors">
+                                    Supprimer
+                                </button>
+                            </form>
+                        </div>
+
+                    </div>
+                <?php endforeach; ?>
+
             <?php endif; ?>
-        </section>
+        </div>
+
     </main>
 </body>
 </html>
