@@ -74,14 +74,14 @@ function sourceBadge(string $type): string
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title><?= strip_tags($article['titre']) ?> - Info Iran</title>
-    <script src="../../assets/js/tailwind.js"></script>
+    <script src="/assets/js/tailwind.js"></script>
 </head>
 
 <body class="bg-slate-100 text-slate-900 font-sans">
     <header class="bg-slate-950 text-white">
         <div class="max-w-7xl mx-auto px-4 py-4 flex items-center justify-between gap-4">
-            <a href="../../index.php" class="font-black tracking-wide text-lg uppercase">Info <span class="text-red-500">Iran</span></a>
-            <a href="../../index.php" class="text-sm bg-white text-slate-900 px-3 py-2 rounded font-semibold">Retour accueil</a>
+            <a href="/" class="font-black tracking-wide text-lg uppercase">Info <span class="text-red-500">Iran</span></a>
+            <a href="/" class="text-sm bg-white text-slate-900 px-3 py-2 rounded font-semibold">Retour accueil</a>
         </div>
     </header>
 
@@ -127,7 +127,7 @@ function sourceBadge(string $type): string
                         <?php endforeach; ?>
                     </div>
                 <?php endif; ?>
-                <a href="../../index.php" class="inline-block mt-5 text-sm text-red-300 underline underline-offset-2">Voir le direct complet</a>
+                <a href="/" class="inline-block mt-5 text-sm text-red-300 underline underline-offset-2">Voir le direct complet</a>
             </aside>
         </div>
 

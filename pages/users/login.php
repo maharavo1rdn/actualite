@@ -9,7 +9,7 @@ unset($_SESSION['flash']);
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Connexion - Info Actualité</title>
-    <script src="../../assets/js/tailwind.js"></script>
+    <script src="/assets/js/tailwind.js"></script>
 </head>
 <body class="bg-gray-100 min-h-screen flex items-center justify-center">
     <div class="w-full max-w-md bg-white p-8 rounded shadow">
@@ -19,7 +19,7 @@ unset($_SESSION['flash']);
             <div class="bg-red-100 text-red-800 p-2 mb-4 border border-red-300 rounded"><?= htmlspecialchars($flash) ?></div>
         <?php endif; ?>
 
-        <form action="../../controllers/traitement_login.php" method="post">
+        <form action="/auth/login" method="post">
             <div class="mb-4">
                 <label class="block text-sm font-medium mb-1" for="email">Email</label>
                 <input id="email" type="email" name="email" value="admin@gmail.com" required class="w-full px-3 py-2 border rounded">
@@ -32,7 +32,7 @@ unset($_SESSION['flash']);
         </form>
 
         <div class="mt-4 text-sm text-gray-500">
-            <a href="../../index.php" class="text-blue-600 hover:underline">Retour au site</a>
+            <a href="/" class="text-blue-600 hover:underline">Retour au site</a>
         </div>
     </div>
 </body>
