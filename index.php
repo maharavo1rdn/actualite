@@ -17,6 +17,7 @@ $categories = $articleService->getCategories();
 
 $selectedCategoryId = null;
 $selectedCategorySlug = trim((string)($_GET['cat_slug'] ?? ''));
+$searchQuery = trim((string)($_GET['q'] ?? ''));
 
 if ($selectedCategorySlug !== '') {
     foreach ($categories as $category) {
@@ -54,8 +55,8 @@ if (isset($_GET['cat']) && !isset($_GET['cat_slug']) && $selectedCategorySlug !=
     exit;
 }
 
-$featuredArticle = $articleService->getFeaturedArticle($selectedCategoryId);
-$recentArticles  = $articleService->getRecentArticles(9, $featuredArticle ? 1 : 0, $selectedCategoryId);
+$featuredArticle = $articleService->getFeaturedArticle($selectedCategoryId, $searchQuery);
+$recentArticles  = $articleService->getRecentArticles(9, $featuredArticle ? 1 : 0, $selectedCategoryId, $searchQuery);
 $liveEvents      = $articleService->getLiveEvents(10);
 
 $categoryColors = [
@@ -132,6 +133,7 @@ function excerptFromHtml(string $html, int $length = 150): string
                     <input type="hidden" name="cat_slug" value="<?= htmlspecialchars($selectedCategorySlug) ?>">
                 <?php endif; ?>
                 <input type="text" name="q" placeholder="Recherche…"
+                    value="<?= htmlspecialchars($searchQuery) ?>"
                     class="w-full px-3.5 py-2 text-sm rounded-l-lg bg-slate-800 border border-slate-700 focus:outline-none focus:border-slate-500 placeholder:text-slate-500">
                 <button type="submit"
                     class="px-4 py-2 bg-red-600 hover:bg-red-700 rounded-r-lg text-sm font-semibold transition-colors">

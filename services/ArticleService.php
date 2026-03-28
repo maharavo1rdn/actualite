@@ -50,7 +50,7 @@ class ArticleService
         return $stmt->fetchAll(PDO::FETCH_ASSOC);
     }
 
-    public function getFeaturedArticle(?int $categoryId = null): ?array
+    public function getFeaturedArticle(?int $categoryId = null, string $searchQuery = ''): ?array
     {
         $sql = "
             SELECT a.*, c.nom AS categorie_nom, img.url_image AS image_url, img.legende AS image_legende
@@ -66,9 +66,22 @@ class ArticleService
         ";
 
         $params = [];
+        $where = [];
+
         if ($categoryId !== null) {
-            $sql .= ' WHERE a.id_categorie = :category_id';
+            $where[] = 'a.id_categorie = :category_id';
             $params['category_id'] = $categoryId;
+        }
+
+        $trimmedSearch = trim($searchQuery);
+        if ($trimmedSearch !== '') {
+            $where[] = '(a.titre LIKE :search_title OR a.contenu LIKE :search_content)';
+            $params['search_title'] = '%' . $trimmedSearch . '%';
+            $params['search_content'] = '%' . $trimmedSearch . '%';
+        }
+
+        if (!empty($where)) {
+            $sql .= ' WHERE ' . implode(' AND ', $where);
         }
 
         $sql .= ' ORDER BY a.id DESC LIMIT 1';
@@ -79,7 +92,7 @@ class ArticleService
         return $row ?: null;
     }
 
-    public function getRecentArticles(int $limit = 6, int $offset = 1, ?int $categoryId = null): array
+    public function getRecentArticles(int $limit = 6, int $offset = 1, ?int $categoryId = null, string $searchQuery = ''): array
     {
         $limit = max(1, $limit);
         $offset = max(0, $offset);
@@ -98,9 +111,22 @@ class ArticleService
         ";
 
         $params = [];
+        $where = [];
+
         if ($categoryId !== null) {
-            $sql .= ' WHERE a.id_categorie = :category_id';
+            $where[] = 'a.id_categorie = :category_id';
             $params['category_id'] = $categoryId;
+        }
+
+        $trimmedSearch = trim($searchQuery);
+        if ($trimmedSearch !== '') {
+            $where[] = '(a.titre LIKE :search_title OR a.contenu LIKE :search_content)';
+            $params['search_title'] = '%' . $trimmedSearch . '%';
+            $params['search_content'] = '%' . $trimmedSearch . '%';
+        }
+
+        if (!empty($where)) {
+            $sql .= ' WHERE ' . implode(' AND ', $where);
         }
 
         $sql .= ' ORDER BY a.id DESC LIMIT :offset, :lim';
