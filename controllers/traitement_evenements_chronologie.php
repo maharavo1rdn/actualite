@@ -15,6 +15,14 @@ if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
 }
 
 $articleIdContext = intval($_POST['article_id_context'] ?? 0);
+$searchQuery = trim((string)($_POST['q'] ?? ''));
+$dateFrom = trim((string)($_POST['date_from'] ?? ''));
+$dateTo = trim((string)($_POST['date_to'] ?? ''));
+$linkFilter = (string)($_POST['link'] ?? 'all');
+
+if (!in_array($linkFilter, ['all', 'linked', 'unlinked'], true)) {
+    $linkFilter = 'all';
+}
 
 $controller = new AuthController();
 $action = $_POST['action'] ?? '';
@@ -45,6 +53,27 @@ $_SESSION['flash_backoffice'] = [
 $redirectUrl = '/backoffice/chronologie';
 if ($articleIdContext > 0) {
     $redirectUrl = '/backoffice/chronologie/article-' . $articleIdContext;
+}
+
+$redirectQuery = [];
+if ($articleIdContext > 0) {
+    $redirectQuery['article_id'] = $articleIdContext;
+}
+if ($searchQuery !== '') {
+    $redirectQuery['q'] = $searchQuery;
+}
+if ($dateFrom !== '') {
+    $redirectQuery['date_from'] = $dateFrom;
+}
+if ($dateTo !== '') {
+    $redirectQuery['date_to'] = $dateTo;
+}
+if ($linkFilter !== 'all') {
+    $redirectQuery['link'] = $linkFilter;
+}
+
+if (!empty($redirectQuery)) {
+    $redirectUrl .= '?' . http_build_query($redirectQuery);
 }
 
 header('Location: ' . $redirectUrl);

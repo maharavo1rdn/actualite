@@ -14,9 +14,58 @@ $events = $controller->listChronologyEvents();
 $articles = $controller->listArticles();
 
 $selectedArticleId = intval($_GET['article_id'] ?? 0);
+$searchQuery = trim((string)($_GET['q'] ?? ''));
+$dateFromInput = trim((string)($_GET['date_from'] ?? ''));
+$dateToInput = trim((string)($_GET['date_to'] ?? ''));
+$linkFilter = (string)($_GET['link'] ?? 'all');
+
+if (!in_array($linkFilter, ['all', 'linked', 'unlinked'], true)) {
+    $linkFilter = 'all';
+}
+
+// Accept only YYYY-MM-DD and normalize to avoid invalid comparisons.
+$dateFrom = preg_match('/^\d{4}-\d{2}-\d{2}$/', $dateFromInput) ? $dateFromInput : '';
+$dateTo = preg_match('/^\d{4}-\d{2}-\d{2}$/', $dateToInput) ? $dateToInput : '';
+
 if ($selectedArticleId > 0) {
     $events = array_values(array_filter($events, static function ($event) use ($selectedArticleId) {
         return intval($event['id_article'] ?? 0) === $selectedArticleId;
+    }));
+}
+
+if ($searchQuery !== '') {
+    $searchNeedle = function_exists('mb_strtolower') ? mb_strtolower($searchQuery) : strtolower($searchQuery);
+    $events = array_values(array_filter($events, static function ($event) use ($searchNeedle) {
+        $haystack = trim(strip_tags(($event['titre_evenement'] ?? '') . ' ' . ($event['description_courte'] ?? '')));
+        $haystack = function_exists('mb_strtolower') ? mb_strtolower($haystack) : strtolower($haystack);
+        return $haystack !== '' && strpos($haystack, $searchNeedle) !== false;
+    }));
+}
+
+if ($dateFrom !== '' || $dateTo !== '') {
+    $events = array_values(array_filter($events, static function ($event) use ($dateFrom, $dateTo) {
+        $timestamp = strtotime((string)($event['date_evenement'] ?? ''));
+        if ($timestamp === false) {
+            return false;
+        }
+
+        $eventDay = date('Y-m-d', $timestamp);
+        if ($dateFrom !== '' && $eventDay < $dateFrom) {
+            return false;
+        }
+
+        if ($dateTo !== '' && $eventDay > $dateTo) {
+            return false;
+        }
+
+        return true;
+    }));
+}
+
+if ($linkFilter !== 'all') {
+    $events = array_values(array_filter($events, static function ($event) use ($linkFilter) {
+        $hasLinkedArticle = intval($event['id_article'] ?? 0) > 0;
+        return $linkFilter === 'linked' ? $hasLinkedArticle : !$hasLinkedArticle;
     }));
 }
 
@@ -32,9 +81,41 @@ usort($events, static function ($a, $b) {
 $flash = $_SESSION['flash_backoffice'] ?? null;
 unset($_SESSION['flash_backoffice']);
 
+$baseListUrl = '/backoffice/chronologie';
+if ($selectedArticleId > 0) {
+    $baseListUrl = '/backoffice/chronologie/article-' . $selectedArticleId;
+}
+
+$activeFilterParams = [];
+if ($selectedArticleId > 0) {
+    $activeFilterParams['article_id'] = $selectedArticleId;
+}
+if ($searchQuery !== '') {
+    $activeFilterParams['q'] = $searchQuery;
+}
+if ($dateFrom !== '') {
+    $activeFilterParams['date_from'] = $dateFrom;
+}
+if ($dateTo !== '') {
+    $activeFilterParams['date_to'] = $dateTo;
+}
+if ($linkFilter !== 'all') {
+    $activeFilterParams['link'] = $linkFilter;
+}
+
+$queryString = http_build_query($activeFilterParams);
+$activeFilterCount = count($activeFilterParams) - ($selectedArticleId > 0 ? 1 : 0);
+
+$fullListUrlWithFilters = $baseListUrl . ($queryString !== '' ? '?' . $queryString : '');
+$clearExtraFiltersUrl = $baseListUrl . ($selectedArticleId > 0 ? '?article_id=' . $selectedArticleId : '');
+
 $createUrl = '/backoffice/chronologie/ajout';
 if ($selectedArticleId > 0) {
     $createUrl = '/backoffice/chronologie/ajout/article-' . $selectedArticleId;
+}
+
+if ($queryString !== '') {
+    $createUrl .= '?' . $queryString;
 }
 ?>
 <!DOCTYPE html>
@@ -79,10 +160,63 @@ if ($selectedArticleId > 0) {
         </div>
 
         <!-- Filter -->
-        <?php if ($selectedArticleId > 0): ?>
+        <form method="get" action="<?= htmlspecialchars($baseListUrl) ?>" class="bg-white border border-gray-200 rounded-xl p-4 md:p-5 mb-5">
+            <div class="grid grid-cols-1 md:grid-cols-5 gap-3">
+                <div class="md:col-span-2">
+                    <label for="q" class="mono text-xs text-gray-500 uppercase tracking-widest">Recherche</label>
+                    <input id="q" type="text" name="q" value="<?= htmlspecialchars($searchQuery) ?>" placeholder="Titre ou description"
+                           class="mt-1 w-full border border-gray-300 rounded-lg px-3 py-2 text-sm focus:outline-none focus:border-black">
+                </div>
+
+                <div>
+                    <label for="date_from" class="mono text-xs text-gray-500 uppercase tracking-widest">Du</label>
+                    <input id="date_from" type="date" name="date_from" value="<?= htmlspecialchars($dateFrom) ?>"
+                           class="mt-1 w-full border border-gray-300 rounded-lg px-3 py-2 text-sm focus:outline-none focus:border-black">
+                </div>
+
+                <div>
+                    <label for="date_to" class="mono text-xs text-gray-500 uppercase tracking-widest">Au</label>
+                    <input id="date_to" type="date" name="date_to" value="<?= htmlspecialchars($dateTo) ?>"
+                           class="mt-1 w-full border border-gray-300 rounded-lg px-3 py-2 text-sm focus:outline-none focus:border-black">
+                </div>
+
+                <div>
+                    <label for="link" class="mono text-xs text-gray-500 uppercase tracking-widest">Lien article</label>
+                    <select id="link" name="link"
+                            class="mt-1 w-full border border-gray-300 rounded-lg px-3 py-2 text-sm bg-white focus:outline-none focus:border-black">
+                        <option value="all" <?= $linkFilter === 'all' ? 'selected' : '' ?>>Tous</option>
+                        <option value="linked" <?= $linkFilter === 'linked' ? 'selected' : '' ?>>Avec article</option>
+                        <option value="unlinked" <?= $linkFilter === 'unlinked' ? 'selected' : '' ?>>Sans article</option>
+                    </select>
+                </div>
+            </div>
+
+            <?php if ($selectedArticleId > 0): ?>
+                <input type="hidden" name="article_id" value="<?= $selectedArticleId ?>">
+            <?php endif; ?>
+
+            <div class="mt-4 flex items-center gap-2">
+                <button type="submit" class="mono text-sm bg-black text-white px-4 py-2 rounded-lg hover:bg-gray-800 transition-colors">
+                    Appliquer les filtres
+                </button>
+                <a href="<?= htmlspecialchars($clearExtraFiltersUrl) ?>" class="mono text-sm text-gray-600 bg-gray-100 hover:bg-gray-200 px-4 py-2 rounded-lg transition-colors">
+                    Réinitialiser
+                </a>
+            </div>
+        </form>
+
+        <?php if ($selectedArticleId > 0 || $activeFilterCount > 0): ?>
             <div class="flex items-center justify-between gap-3 bg-blue-50 border border-blue-200 rounded-lg px-4 py-3 mb-4 text-sm text-blue-700">
-                <span>Filtre actif — article <span class="mono">#<?= $selectedArticleId ?></span></span>
-                <a href="/backoffice/chronologie" class="mono text-xs underline hover:no-underline">retirer le filtre</a>
+                <span>
+                    Filtres actifs
+                    <?php if ($selectedArticleId > 0): ?>
+                        — article <span class="mono">#<?= $selectedArticleId ?></span>
+                    <?php endif; ?>
+                    <?php if ($activeFilterCount > 0): ?>
+                        <span class="mono">(<?= $activeFilterCount ?>)</span>
+                    <?php endif; ?>
+                </span>
+                <a href="<?= htmlspecialchars($clearExtraFiltersUrl) ?>" class="mono text-xs underline hover:no-underline">retirer les filtres</a>
             </div>
         <?php endif; ?>
 
@@ -144,7 +278,7 @@ if ($selectedArticleId > 0) {
 
                         <!-- Actions -->
                         <div class="flex items-center gap-2 pt-0.5">
-                            <a href="/backoffice/chronologie/edit-<?= intval($event['id']) ?><?= $selectedArticleId > 0 ? '?article_id=' . $selectedArticleId : '' ?>"
+                            <a href="/backoffice/chronologie/edit-<?= intval($event['id']) ?><?= $queryString !== '' ? '?' . $queryString : '' ?>"
                                class="mono text-sm text-gray-600 bg-gray-100 hover:bg-gray-200 px-3.5 py-2 rounded-lg transition-colors">
                                 Modifier
                             </a>
@@ -152,6 +286,10 @@ if ($selectedArticleId > 0) {
                                 <input type="hidden" name="action" value="delete">
                                 <input type="hidden" name="id" value="<?= intval($event['id']) ?>">
                                 <input type="hidden" name="article_id_context" value="<?= $selectedArticleId > 0 ? $selectedArticleId : 0 ?>">
+                                <input type="hidden" name="q" value="<?= htmlspecialchars($searchQuery) ?>">
+                                <input type="hidden" name="date_from" value="<?= htmlspecialchars($dateFrom) ?>">
+                                <input type="hidden" name="date_to" value="<?= htmlspecialchars($dateTo) ?>">
+                                <input type="hidden" name="link" value="<?= htmlspecialchars($linkFilter) ?>">
                                 <button type="submit" class="mono text-sm text-red-500 bg-red-50 hover:bg-red-100 px-3.5 py-2 rounded-lg transition-colors">
                                     Supprimer
                                 </button>
