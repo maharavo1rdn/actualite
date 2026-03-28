@@ -19,20 +19,20 @@ unset($_SESSION['flash']);
             <div class="bg-red-100 text-red-800 p-2 mb-4 border border-red-300 rounded"><?= htmlspecialchars($flash) ?></div>
         <?php endif; ?>
 
-        <form action="/controllers/traitement_login.php" method="post">
+        <form action="../../controllers/traitement_login.php" method="post">
             <div class="mb-4">
                 <label class="block text-sm font-medium mb-1" for="email">Email</label>
-                <input id="email" type="email" name="email" required class="w-full px-3 py-2 border rounded">
+                <input id="email" type="email" name="email" value="admin@gmail.com" required class="w-full px-3 py-2 border rounded">
             </div>
             <div class="mb-4">
                 <label class="block text-sm font-medium mb-1" for="password">Mot de passe</label>
-                <input id="password" type="password" name="password" required class="w-full px-3 py-2 border rounded">
+                <input id="password" value="adminpass" type="password" name="password" required class="w-full px-3 py-2 border rounded">
             </div>
             <button type="submit" class="w-full bg-blue-600 text-white py-2 rounded font-semibold hover:bg-blue-700">Se connecter</button>
         </form>
 
         <div class="mt-4 text-sm text-gray-500">
-            <a href="index.php" class="text-blue-600 hover:underline">Retour au site</a>
+            <a href="../../index.php" class="text-blue-600 hover:underline">Retour au site</a>
         </div>
     </div>
 </body>

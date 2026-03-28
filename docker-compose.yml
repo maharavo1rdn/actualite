@@ -1,5 +1,4 @@
 version: '3.8'
-
 services:
   db:
     image: mysql:8.0
@@ -21,15 +20,13 @@ services:
       retries: 5
 
   web:
-    image: php:8.1-apache
+    build: .                    
     container_name: actualite_web
     ports:
       - '8080:80'
     depends_on:
       db:
         condition: service_healthy
-    volumes:
-      - .:/var/www/html:cached
     environment:
       DB_HOST: db
       DB_NAME: info_actualite

@@ -1,7 +1,7 @@
 <?php
 session_start();
 if (!isset($_SESSION['user'])) {
-    header('Location: login.php');
+    header('Location: pages/users/login.php');
     exit;
 }
 
@@ -21,7 +21,7 @@ $username = htmlspecialchars($_SESSION['user']['pseudo']);
             <h1 class="text-xl font-bold">Backoffice - Info Actualité</h1>
             <div>
                 <span class="mr-4">Connecté en tant que <strong><?= $username ?></strong></span>
-                <a href="/controllers/traitement_logout.php" class="bg-red-600 px-3 py-1 rounded hover:bg-red-700">Déconnexion</a>
+                <a href="../../controllers/traitement_logout.php" class="bg-red-600 px-3 py-1 rounded hover:bg-red-700">Déconnexion</a>
             </div>
         </div>
     </header>

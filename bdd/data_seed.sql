@@ -13,6 +13,10 @@ INSERT INTO roles (code, niveau) VALUES
 ('EMPLOYE', 1);
 
 -- Utilisateurs de test
+-- Mots de passe en clair pour référence :
+-- admin  -> adminpass
+-- sophie -> redacteurpass
+-- luc   -> lecteurpass
 INSERT INTO utilisateurs (pseudo, email, mot_de_passe, id_role) VALUES
 ('admin', 'admin@gmail.com', '$2y$10$PUjODAoDM53ay9Es4Br4I.lC86ny19b452rmUe5Nw3nias.8Mgify', 1),
 ('sophie_roux', 'sophie.roux@gmail.com', '$2y$10$0Kf/ARBU8U.Li1nvlukjLuLJoigOF5/in6kdtJnDhaGJWKu.xEMr6', 2),

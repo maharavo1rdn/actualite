@@ -40,7 +40,7 @@ $timeline = [
                 <a href="#" class="hover:text-red-500 uppercase">Analyses</a>
                 <a href="#" class="hover:text-red-500 uppercase">Direct</a>
                 <a href="#" class="hover:text-red-500 uppercase">Cartes</a>
-                <a href="/pages/users/login.php" class="bg-white text-black px-3 py-1 rounded border border-gray-300 hover:bg-gray-100 uppercase">Connexion</a>
+                <a href="pages/users/login.php" class="bg-white text-black px-3 py-1 rounded border border-gray-300 hover:bg-gray-100 uppercase">Connexion</a>
             </nav>
         </div>
     </header>

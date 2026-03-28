@@ -1,22 +1,23 @@
 FROM php:8.1-apache
 
-# Install dependencies needed for MySQL and common extensions
+# Installer les dépendances et l'extension pdo_mysql
 RUN apt-get update && apt-get install -y --no-install-recommends \
-        default-mysql-client \
-    && docker-php-ext-install pdo pdo_mysql \
+    default-mysql-client \
+    default-libmysqlclient-dev \
+    libzip-dev \
+    && docker-php-ext-install pdo_mysql zip \
+    && docker-php-ext-enable pdo_mysql \
     && rm -rf /var/lib/apt/lists/*
 
-# Copy application code into container
+RUN a2enmod rewrite
+
+RUN sed -i 's/AllowOverride None/AllowOverride All/g' /etc/apache2/apache2.conf
+
+# Copier le code source
 COPY . /var/www/html
 
-# Ensure permissions are correct
-RUN chown -R www-data:www-data /var/www/html
-
-# DocumentRoot standard sur /var/www/html
-RUN sed -ri 's!DocumentRoot /var/www/html/public!DocumentRoot /var/www/html!g' /etc/apache2/sites-available/*.conf || true && \
-    sed -ri 's!<Directory /var/www/html/public/>!<Directory /var/www/html/>!g' /etc/apache2/apache2.conf || true && \
-    sed -ri 's!<Directory /var/www/html>!<Directory /var/www/html/>!g' /etc/apache2/apache2.conf || true
+# Permissions correctes
+RUN chown -R www-data:www-data /var/www/html \
+    && chmod -R 755 /var/www/html
 
 EXPOSE 80
-
-# Apache already starts by default in php:apache image

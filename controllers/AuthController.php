@@ -23,7 +23,7 @@ class AuthController
 
         if (!$email || $password === '') {
             $_SESSION['flash'] = 'Email ou mot de passe manquant.';
-            header('Location: /login.php');
+            header('Location: ../pages/users/login.php');
             exit;
         }
 
@@ -31,7 +31,7 @@ class AuthController
 
         if (!$user) {
             $_SESSION['flash'] = 'Identifiants invalides.';
-            header('Location: /login.php');
+            header('Location: ../pages/users/login.php');
             exit;
         }
 
@@ -42,7 +42,7 @@ class AuthController
             'id_role' => $user['id_role'],
         ];
 
-        header('Location: /pages/articles/backoffice.php');
+        header('Location: ../pages/articles/backoffice.php');
         exit;
     }
 
@@ -51,7 +51,7 @@ class AuthController
         session_start();
         session_unset();
         session_destroy();
-        header('Location: /pages/users/login.php');
+        header('Location: ../pages/users/login.php');
         exit;
     }
 
