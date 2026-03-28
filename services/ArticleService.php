@@ -26,10 +26,6 @@ class ArticleService
 
     public function addArticle(array $data): bool
     {
-        if (isset($data['titre']) && !str_contains($data['titre'], '<title>')) {
-            $data['titre'] = '<title>' . htmlspecialchars($data['titre']) . '</title>';
-        }
-
         return $this->model->insert('articles', $data);
     }
 
