@@ -92,7 +92,7 @@ function excerptFromHtml(string $html, int $length = 150): string
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Info Iran - Actualites</title>
-    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="styles/tailwind.js"></script>
 </head>
 
 <body class="bg-slate-100 text-slate-900 font-sans">

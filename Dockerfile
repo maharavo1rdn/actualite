@@ -12,6 +12,8 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
 RUN a2enmod rewrite
 
 RUN sed -i 's/AllowOverride None/AllowOverride All/g' /etc/apache2/apache2.conf
+RUN echo 'AddDefaultCharset UTF-8' >> /etc/apache2/apache2.conf
+RUN echo "AddType 'text/html; charset=UTF-8' .html .php" >> /etc/apache2/apache2.conf
 
 # Copier le code source
 COPY . /var/www/html
