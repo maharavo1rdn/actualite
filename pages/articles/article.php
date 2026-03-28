@@ -74,7 +74,7 @@ function sourceBadge(string $type): string
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title><?= strip_tags($article['titre']) ?> - Info Iran</title>
-    <script src="../../styles/tailwind.js"></script>
+    <script src="../../assets/js/tailwind.js"></script>
 </head>
 
 <body class="bg-slate-100 text-slate-900 font-sans">

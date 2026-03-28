@@ -58,7 +58,7 @@ $idArticleValue = $eventToEdit['id_article'] ?? ($selectedArticleId > 0 ? $selec
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Backoffice Chronologie - Info Actualite</title>
-    <script src="../../styles/tailwind.js"></script>
+    <script src="../../assets/js/tailwind.js"></script>
 </head>
 <body class="bg-gray-100 min-h-screen">
     <header class="bg-black text-white p-4">
