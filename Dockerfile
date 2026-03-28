@@ -12,6 +12,11 @@ COPY . /var/www/html
 # Ensure permissions are correct
 RUN chown -R www-data:www-data /var/www/html
 
+# DocumentRoot standard sur /var/www/html
+RUN sed -ri 's!DocumentRoot /var/www/html/public!DocumentRoot /var/www/html!g' /etc/apache2/sites-available/*.conf || true && \
+    sed -ri 's!<Directory /var/www/html/public/>!<Directory /var/www/html/>!g' /etc/apache2/apache2.conf || true && \
+    sed -ri 's!<Directory /var/www/html>!<Directory /var/www/html/>!g' /etc/apache2/apache2.conf || true
+
 EXPOSE 80
 
 # Apache already starts by default in php:apache image

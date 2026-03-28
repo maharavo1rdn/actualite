@@ -36,10 +36,11 @@ $timeline = [
     <header class="bg-black text-white p-4 sticky top-0 z-50 shadow-md">
         <div class="container mx-auto flex justify-between items-center">
             <h1 class="text-2xl font-bold tracking-tighter uppercase">Info <span class="text-red-600">Actualité</span></h1>
-            <nav class="hidden md:flex space-x-6 text-sm font-semibold">
+            <nav class="hidden md:flex space-x-6 text-sm font-semibold items-center">
                 <a href="#" class="hover:text-red-500 uppercase">Analyses</a>
                 <a href="#" class="hover:text-red-500 uppercase">Direct</a>
                 <a href="#" class="hover:text-red-500 uppercase">Cartes</a>
+                <a href="/pages/users/login.php" class="bg-white text-black px-3 py-1 rounded border border-gray-300 hover:bg-gray-100 uppercase">Connexion</a>
             </nav>
         </div>
     </header>

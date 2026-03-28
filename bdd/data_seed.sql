@@ -9,13 +9,14 @@ INSERT INTO categories (nom, description) VALUES
 -- Roles de base
 INSERT INTO roles (code, niveau) VALUES
 ('ADMIN', 10),
-('REDACTEUR', 5);
+('REDACTEUR', 5),
+('EMPLOYE', 1);
 
 -- Utilisateurs de test
 INSERT INTO utilisateurs (pseudo, email, mot_de_passe, id_role) VALUES
-('admin', 'admin@example.com', 'adminpass', 1),
-('journaliste', 'redacteur@example.com', 'redacteurpass', 2),
-('abonne', 'lecteur@example.com', 'lecteurpass', 3);
+('admin', 'admin@gmail.com', '$2y$10$PUjODAoDM53ay9Es4Br4I.lC86ny19b452rmUe5Nw3nias.8Mgify', 1),
+('sophie_roux', 'sophie.roux@gmail.com', '$2y$10$0Kf/ARBU8U.Li1nvlukjLuLJoigOF5/in6kdtJnDhaGJWKu.xEMr6', 2),
+('luc_martin', 'luc.martin@gmail.com', '$2y$10$zYrrVgWxK6oAakdTzyx8D.lPEtnE7bhrlZyh/F6zMJCnLgkVQ4Uz2', 3);
 
 -- Types de sources
 INSERT INTO type_sources (libelle, description) VALUES
