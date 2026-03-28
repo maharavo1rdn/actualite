@@ -1,7 +1,7 @@
 <?php
 session_start();
 if (!isset($_SESSION['user'])) {
-    header('Location: ../users/login.php');
+    header('Location: /connexion');
     exit;
 }
 
@@ -58,16 +58,16 @@ $idArticleValue = $eventToEdit['id_article'] ?? ($selectedArticleId > 0 ? $selec
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Backoffice Chronologie - Info Actualite</title>
-    <script src="../../assets/js/tailwind.js"></script>
+    <script src="/assets/js/tailwind.js"></script>
 </head>
 <body class="bg-gray-100 min-h-screen">
     <header class="bg-black text-white p-4">
         <div class="container mx-auto flex justify-between items-center">
             <h1 class="text-xl font-bold">Backoffice Chronologie - Info Actualite</h1>
             <div class="flex items-center gap-2 flex-wrap justify-end">
-                <a href="backoffice_articles.php" class="bg-blue-600 px-3 py-1 rounded hover:bg-blue-700">Liste des articles</a>
+                <a href="/backoffice" class="bg-blue-600 px-3 py-1 rounded hover:bg-blue-700">Liste des articles</a>
                 <span class="mr-4">Connecte en tant que <strong><?= $username ?></strong></span>
-                <a href="../../controllers/traitement_logout.php" class="bg-red-600 px-3 py-1 rounded hover:bg-red-700">Deconnexion</a>
+                <a href="/deconnexion" class="bg-red-600 px-3 py-1 rounded hover:bg-red-700">Deconnexion</a>
             </div>
         </div>
     </header>
@@ -76,7 +76,7 @@ $idArticleValue = $eventToEdit['id_article'] ?? ($selectedArticleId > 0 ? $selec
         <?php if ($selectedArticleId > 0): ?>
             <p class="mb-3 text-sm text-blue-800 bg-blue-100 border border-blue-300 rounded p-2">
                 Filtre actif: article #<?= $selectedArticleId ?>.
-                <a href="backoffice_evenements_chronologie.php" class="underline">Retirer le filtre</a>
+                <a href="/backoffice/chronologie" class="underline">Retirer le filtre</a>
             </p>
         <?php endif; ?>
         <p class="mb-6 text-gray-700">Les champs Titre et Description acceptent du HTML brut Tiny Docs (exemples: &lt;h1&gt;...&lt;/h1&gt;, &lt;p&gt;...&lt;/p&gt;). Ces balises sont enregistrees telles quelles en base.</p>
@@ -90,7 +90,7 @@ $idArticleValue = $eventToEdit['id_article'] ?? ($selectedArticleId > 0 ? $selec
         <section class="bg-white p-6 rounded shadow mb-8">
             <h3 class="text-xl font-semibold mb-4"><?= $formTitle ?></h3>
 
-            <form action="../../controllers/traitement_evenements_chronologie.php" method="post" class="space-y-4">
+            <form action="/backoffice/chronologie/traitement" method="post" class="space-y-4">
                 <input type="hidden" name="action" value="<?= $formAction ?>">
                 <input type="hidden" name="article_id_context" value="<?= $selectedArticleId > 0 ? $selectedArticleId : 0 ?>">
                 <?php if ($eventToEdit): ?>
@@ -130,7 +130,7 @@ $idArticleValue = $eventToEdit['id_article'] ?? ($selectedArticleId > 0 ? $selec
                         <?= $eventToEdit ? 'Mettre a jour' : 'Creer' ?>
                     </button>
                     <?php if ($eventToEdit): ?>
-                        <a href="backoffice_evenements_chronologie.php" class="bg-gray-600 text-white px-4 py-2 rounded hover:bg-gray-700">Annuler l'edition</a>
+                        <a href="/backoffice/chronologie" class="bg-gray-600 text-white px-4 py-2 rounded hover:bg-gray-700">Annuler l'edition</a>
                     <?php endif; ?>
                 </div>
             </form>
@@ -164,9 +164,9 @@ $idArticleValue = $eventToEdit['id_article'] ?? ($selectedArticleId > 0 ? $selec
                                 </div>
 
                                 <div class="flex gap-2">
-                                    <a href="backoffice_evenements_chronologie.php?edit_id=<?= intval($event['id']) ?>" class="bg-yellow-500 text-white px-3 py-2 rounded hover:bg-yellow-600">Modifier</a>
+                                    <a href="/backoffice/chronologie/edit-<?= intval($event['id']) ?>" class="bg-yellow-500 text-white px-3 py-2 rounded hover:bg-yellow-600">Modifier</a>
 
-                                    <form action="../../controllers/traitement_evenements_chronologie.php" method="post" onsubmit="return confirm('Supprimer cet evenement ?');">
+                                    <form action="/backoffice/chronologie/traitement" method="post" onsubmit="return confirm('Supprimer cet evenement ?');">
                                         <input type="hidden" name="action" value="delete">
                                         <input type="hidden" name="id" value="<?= intval($event['id']) ?>">
                                         <input type="hidden" name="article_id_context" value="<?= $selectedArticleId > 0 ? $selectedArticleId : 0 ?>">

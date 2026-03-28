@@ -4,11 +4,54 @@ require_once __DIR__ . '/services/ArticleService.php';
 
 $articleService = new ArticleService();
 
+function categorySlugify(string $value): string
+{
+    $ascii = iconv('UTF-8', 'ASCII//TRANSLIT//IGNORE', $value);
+    $normalized = strtolower($ascii !== false ? $ascii : $value);
+    $slug = preg_replace('/[^a-z0-9]+/', '-', $normalized) ?? '';
+    $slug = trim($slug, '-');
+    return $slug !== '' ? $slug : 'categorie';
+}
+
 $categories = $articleService->getCategories();
-$selectedCategoryId = isset($_GET['cat']) ? intval($_GET['cat']) : null;
+
+$selectedCategoryId = null;
+$selectedCategorySlug = trim((string)($_GET['cat_slug'] ?? ''));
+
+if ($selectedCategorySlug !== '') {
+    foreach ($categories as $category) {
+        $candidateSlug = categorySlugify((string)($category['nom'] ?? ''));
+        if ($candidateSlug === $selectedCategorySlug) {
+            $selectedCategoryId = intval($category['id']);
+            break;
+        }
+    }
+
+    if ($selectedCategoryId === null && ctype_digit($selectedCategorySlug)) {
+        $selectedCategoryId = intval($selectedCategorySlug);
+    }
+}
+
+if ($selectedCategoryId === null && isset($_GET['cat'])) {
+    $selectedCategoryId = intval($_GET['cat']);
+}
 
 if ($selectedCategoryId !== null && $selectedCategoryId <= 0) {
     $selectedCategoryId = null;
+}
+
+if ($selectedCategoryId !== null && $selectedCategorySlug === '') {
+    foreach ($categories as $category) {
+        if (intval($category['id']) === $selectedCategoryId) {
+            $selectedCategorySlug = categorySlugify((string)($category['nom'] ?? ''));
+            break;
+        }
+    }
+}
+
+if (isset($_GET['cat']) && !isset($_GET['cat_slug']) && $selectedCategorySlug !== '') {
+    header('Location: /categorie/' . urlencode($selectedCategorySlug), true, 301);
+    exit;
 }
 
 $featuredArticle = $articleService->getFeaturedArticle($selectedCategoryId);
@@ -92,28 +135,31 @@ function excerptFromHtml(string $html, int $length = 150): string
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Info Iran - Actualites</title>
-    <script src="assets/js/tailwind.js"></script>
+    <script src="/assets/js/tailwind.js"></script>
 </head>
 
 <body class="bg-slate-100 text-slate-900 font-sans">
     <header class="bg-slate-950 text-white sticky top-0 z-50">
         <div class="max-w-7xl mx-auto px-4 py-4 flex items-center justify-between gap-4">
-            <a href="index.php" class="font-black tracking-wide text-lg uppercase">Info <span class="text-red-500">Iran</span></a>
-            <form action="index.php" method="get" class="hidden md:flex flex-1 max-w-xl">
-                <?php if ($selectedCategoryId): ?>
-                    <input type="hidden" name="cat" value="<?= intval($selectedCategoryId) ?>">
+            <a href="/" class="font-black tracking-wide text-lg uppercase">Info <span class="text-red-500">Iran</span></a>
+            <form action="/" method="get" class="hidden md:flex flex-1 max-w-xl">
+                <?php if ($selectedCategorySlug !== ''): ?>
+                    <input type="hidden" name="cat_slug" value="<?= htmlspecialchars($selectedCategorySlug) ?>">
                 <?php endif; ?>
                 <input type="text" name="q" placeholder="Recherche rapide" class="w-full px-3 py-2 rounded-l bg-slate-800 border border-slate-700 focus:outline-none">
                 <button type="submit" class="px-4 py-2 bg-red-600 rounded-r font-semibold">Rechercher</button>
             </form>
-            <a href="pages/users/login.php" class="text-sm bg-white text-slate-900 px-3 py-2 rounded font-semibold">Connexion</a>
+            <a href="/connexion" class="text-sm bg-white text-slate-900 px-3 py-2 rounded font-semibold">Connexion</a>
         </div>
         <nav class="border-t border-slate-800">
             <div class="max-w-7xl mx-auto px-4 py-3 flex flex-wrap gap-2 text-sm font-semibold uppercase">
-                <a href="index.php" class="px-3 py-1 rounded <?= $selectedCategoryId === null ? 'bg-red-600 text-white' : 'bg-slate-800 text-slate-200' ?>">Tout</a>
+                <a href="/" class="px-3 py-1 rounded <?= $selectedCategoryId === null ? 'bg-red-600 text-white' : 'bg-slate-800 text-slate-200' ?>">Tout</a>
                 <?php foreach ($categories as $category): ?>
-                    <?php $catId = intval($category['id']); ?>
-                    <a href="index.php?cat=<?= $catId ?>" class="px-3 py-1 rounded <?= $selectedCategoryId === $catId ? 'bg-red-600 text-white' : 'bg-slate-800 text-slate-200' ?>">
+                    <?php
+                    $catId = intval($category['id']);
+                    $catSlug = categorySlugify((string)($category['nom'] ?? ''));
+                    ?>
+                    <a href="/categorie/<?= urlencode($catSlug) ?>" class="px-3 py-1 rounded <?= $selectedCategoryId === $catId ? 'bg-red-600 text-white' : 'bg-slate-800 text-slate-200' ?>">
                         <?= htmlspecialchars($category['nom']) ?>
                     </a>
                 <?php endforeach; ?>
@@ -132,7 +178,7 @@ function excerptFromHtml(string $html, int $length = 150): string
                     </span>
                     <div class="text-3xl md:text-5xl font-black leading-tight"><?= $featuredArticle['titre'] ?></div>
                     <p class="text-sm md:text-base text-slate-100">Publie le <?= htmlspecialchars(formatDateFr($featuredArticle['date_publication'])) ?></p>
-                    <a href="pages/articles/article.php?s=<?= urlencode($featuredArticle['slug']) ?>" class="inline-flex items-center gap-2 text-sm md:text-base font-bold underline underline-offset-4">
+                    <a href="/article/<?= urlencode($featuredArticle['slug']) ?>.html" class="inline-flex items-center gap-2 text-sm md:text-base font-bold underline underline-offset-4">
                         Lire l'analyse complete
                     </a>
                 </div>
@@ -154,7 +200,7 @@ function excerptFromHtml(string $html, int $length = 150): string
                                     <span class="inline-block text-[11px] uppercase font-bold px-2 py-1 rounded text-white <?= categoryBadgeClass($categoryColors, $article['categorie_nom'] ?? 'Actualite') ?>">
                                         <?= htmlspecialchars($article['categorie_nom'] ?? 'Actualite') ?>
                                     </span>
-                                    <a href="pages/articles/article.php?s=<?= urlencode($article['slug']) ?>" class="block text-base font-bold leading-snug hover:text-red-700">
+                                    <a href="/article/<?= urlencode($article['slug']) ?>.html" class="block text-base font-bold leading-snug hover:text-red-700">
                                         <?= strip_tags($article['titre']) ?>
                                     </a>
                                     <p class="text-sm text-slate-600"><?= htmlspecialchars(excerptFromHtml($article['contenu'], 150)) ?></p>
@@ -176,7 +222,7 @@ function excerptFromHtml(string $html, int $length = 150): string
                                 <p class="text-xs font-bold text-slate-300"><?= htmlspecialchars(date('H:i', strtotime($event['date_evenement']))) ?></p>
                                 <div class="text-sm leading-snug"><?= $event['description_courte'] ?></div>
                                 <?php if (!empty($event['article_slug'])): ?>
-                                    <a href="pages/articles/article.php?s=<?= urlencode($event['article_slug']) ?>" class="text-xs text-red-300 underline underline-offset-2">Article lie</a>
+                                    <a href="/article/<?= urlencode($event['article_slug']) ?>.html" class="text-xs text-red-300 underline underline-offset-2">Article lie</a>
                                 <?php endif; ?>
                             </article>
                         <?php endforeach; ?>

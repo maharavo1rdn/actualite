@@ -1,7 +1,7 @@
 <?php
 session_start();
 if (!isset($_SESSION['user'])) {
-    header('Location: ../users/login.php');
+    header('Location: /connexion');
     exit;
 }
 
@@ -28,7 +28,7 @@ function articleTitlePreview(string $rawTitle): string
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Backoffice Articles - Info Actualite</title>
-    <script src="../../assets/js/tailwind.js"></script>
+    <script src="/assets/js/tailwind.js"></script>
 </head>
 <body class="bg-gray-100 min-h-screen">
     <header class="bg-black text-white p-4">
@@ -36,8 +36,8 @@ function articleTitlePreview(string $rawTitle): string
             <h1 class="text-xl font-bold">Backoffice Articles - Info Actualite</h1>
             <div class="flex items-center gap-3 flex-wrap">
                 <span class="text-sm">Connecte en tant que <strong><?= $username ?></strong></span>
-                <a href="backoffice_evenements_chronologie.php" class="bg-blue-600 px-3 py-1 rounded hover:bg-blue-700 text-sm">Gerer la chronologie</a>
-                <a href="../../controllers/traitement_logout.php" class="bg-red-600 px-3 py-1 rounded hover:bg-red-700 text-sm">Deconnexion</a>
+                <a href="/backoffice/chronologie" class="bg-blue-600 px-3 py-1 rounded hover:bg-blue-700 text-sm">Gerer la chronologie</a>
+                <a href="/deconnexion" class="bg-red-600 px-3 py-1 rounded hover:bg-red-700 text-sm">Deconnexion</a>
             </div>
         </div>
     </header>
@@ -46,7 +46,7 @@ function articleTitlePreview(string $rawTitle): string
         <section class="bg-white p-6 rounded shadow">
             <div class="flex flex-col md:flex-row md:items-center md:justify-between gap-3 mb-4">
                 <h2 class="text-2xl font-bold">Liste des articles</h2>
-                <a href="../../index.php" class="text-sm bg-gray-800 text-white px-3 py-2 rounded hover:bg-gray-900">Voir le front office</a>
+                <a href="/" class="text-sm bg-gray-800 text-white px-3 py-2 rounded hover:bg-gray-900">Voir le front office</a>
             </div>
 
             <p class="mb-6 text-gray-700">Workflow: apres connexion, cette page sert de point d'entree pour parcourir les articles, ouvrir leur detail front office, puis gerer les evenements chronologiques lies.</p>
@@ -80,8 +80,8 @@ function articleTitlePreview(string $rawTitle): string
                                     <td class="px-4 py-3 border-b text-sm text-gray-600"><?= $publishedAt ?></td>
                                     <td class="px-4 py-3 border-b">
                                         <div class="flex flex-wrap gap-2">
-                                            <a href="article.php?s=<?= urlencode($slug) ?>" class="bg-green-600 text-white px-3 py-1 rounded text-sm hover:bg-green-700">Voir detail</a>
-                                            <a href="backoffice_evenements_chronologie.php?article_id=<?= $articleId ?>" class="bg-amber-500 text-white px-3 py-1 rounded text-sm hover:bg-amber-600">Evenements lies</a>
+                                            <a href="/article/<?= urlencode($slug) ?>.html" class="bg-green-600 text-white px-3 py-1 rounded text-sm hover:bg-green-700">Voir detail</a>
+                                            <a href="/backoffice/chronologie/article-<?= $articleId ?>" class="bg-amber-500 text-white px-3 py-1 rounded text-sm hover:bg-amber-600">Evenements lies</a>
                                         </div>
                                     </td>
                                 </tr>

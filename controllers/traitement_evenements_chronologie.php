@@ -5,12 +5,12 @@ require_once __DIR__ . '/AuthController.php';
 session_start();
 
 if (!isset($_SESSION['user'])) {
-    header('Location: ../pages/users/login.php');
+    header('Location: /connexion');
     exit;
 }
 
 if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
-    header('Location: ../pages/articles/backoffice_evenements_chronologie.php');
+    header('Location: /backoffice/chronologie');
     exit;
 }
 
@@ -42,9 +42,9 @@ $_SESSION['flash_backoffice'] = [
     'message' => $message,
 ];
 
-$redirectUrl = '../pages/articles/backoffice_evenements_chronologie.php';
+$redirectUrl = '/backoffice/chronologie';
 if ($articleIdContext > 0) {
-    $redirectUrl .= '?article_id=' . $articleIdContext;
+    $redirectUrl = '/backoffice/chronologie/article-' . $articleIdContext;
 }
 
 header('Location: ' . $redirectUrl);
