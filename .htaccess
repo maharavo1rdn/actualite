@@ -23,6 +23,9 @@ RewriteRule ^pages/articles/backoffice_evenements_chronologie\.php$ /backoffice/
 RewriteCond %{THE_REQUEST} \s/+pages/articles/backoffice_evenements_chronologie\.php\?edit_id=([0-9]+)\s [NC]
 RewriteRule ^pages/articles/backoffice_evenements_chronologie\.php$ /backoffice/chronologie/edit-%1? [R=301,L]
 
+RewriteCond %{THE_REQUEST} \s/+pages/articles/backoffice_evenements_chronologie_form\.php\s [NC]
+RewriteRule ^pages/articles/backoffice_evenements_chronologie_form\.php$ /backoffice/chronologie/ajout [R=301,L]
+
 RewriteCond %{THE_REQUEST} \s/+pages/articles/backoffice_evenements_chronologie\.php\s [NC]
 RewriteRule ^pages/articles/backoffice_evenements_chronologie\.php$ /backoffice/chronologie [R=301,L]
 
@@ -57,5 +60,7 @@ RewriteRule ^auth/login/?$ controllers/traitement_login.php [L,QSA]
 RewriteRule ^backoffice/?$ pages/articles/backoffice_articles.php [L,QSA]
 RewriteRule ^backoffice/chronologie/?$ pages/articles/backoffice_evenements_chronologie.php [L,QSA]
 RewriteRule ^backoffice/chronologie/article-([0-9]+)/?$ pages/articles/backoffice_evenements_chronologie.php?article_id=$1 [L,QSA]
-RewriteRule ^backoffice/chronologie/edit-([0-9]+)/?$ pages/articles/backoffice_evenements_chronologie.php?edit_id=$1 [L,QSA]
+RewriteRule ^backoffice/chronologie/ajout/?$ pages/articles/backoffice_evenements_chronologie_form.php [L,QSA]
+RewriteRule ^backoffice/chronologie/ajout/article-([0-9]+)/?$ pages/articles/backoffice_evenements_chronologie_form.php?article_id=$1 [L,QSA]
+RewriteRule ^backoffice/chronologie/edit-([0-9]+)/?$ pages/articles/backoffice_evenements_chronologie_form.php?edit_id=$1 [L,QSA]
 RewriteRule ^backoffice/chronologie/traitement/?$ controllers/traitement_evenements_chronologie.php [L,QSA]

@@ -29,28 +29,13 @@ usort($events, static function ($a, $b) {
     return strcmp($b['date_evenement'], $a['date_evenement']);
 });
 
-$eventToEdit = null;
-$editId = intval($_GET['edit_id'] ?? 0);
-if ($editId > 0) {
-    $eventToEdit = $controller->getChronologyEvent($editId);
-}
-
 $flash = $_SESSION['flash_backoffice'] ?? null;
 unset($_SESSION['flash_backoffice']);
 
-$formAction = $eventToEdit ? 'update' : 'create';
-$formTitle = $eventToEdit ? 'Modifier un evenement' : 'Ajouter un evenement';
-
-$titreValue = $eventToEdit['titre_evenement'] ?? '<h3>Nouveau titre</h3>';
-$dateValue = '';
-if (!empty($eventToEdit['date_evenement'])) {
-    $timestamp = strtotime($eventToEdit['date_evenement']);
-    if ($timestamp !== false) {
-        $dateValue = date('Y-m-d\TH:i', $timestamp);
-    }
+$createUrl = '/backoffice/chronologie/ajout';
+if ($selectedArticleId > 0) {
+    $createUrl = '/backoffice/chronologie/ajout/article-' . $selectedArticleId;
 }
-$descriptionValue = $eventToEdit['description_courte'] ?? '<p>Description courte de l\'evenement</p>';
-$idArticleValue = $eventToEdit['id_article'] ?? ($selectedArticleId > 0 ? $selectedArticleId : '');
 ?>
 <!DOCTYPE html>
 <html lang="fr">
@@ -87,57 +72,11 @@ $idArticleValue = $eventToEdit['id_article'] ?? ($selectedArticleId > 0 ? $selec
             </div>
         <?php endif; ?>
 
-        <section class="bg-white p-6 rounded shadow mb-8">
-            <h3 class="text-xl font-semibold mb-4"><?= $formTitle ?></h3>
-
-            <form action="/backoffice/chronologie/traitement" method="post" class="space-y-4">
-                <input type="hidden" name="action" value="<?= $formAction ?>">
-                <input type="hidden" name="article_id_context" value="<?= $selectedArticleId > 0 ? $selectedArticleId : 0 ?>">
-                <?php if ($eventToEdit): ?>
-                    <input type="hidden" name="id" value="<?= intval($eventToEdit['id']) ?>">
-                <?php endif; ?>
-
-                <div>
-                    <label class="block text-sm font-medium mb-1" for="titre_evenement">Titre evenement (HTML)</label>
-                    <textarea id="titre_evenement" name="titre_evenement" rows="2" class="w-full px-3 py-2 border rounded" required><?= htmlspecialchars($titreValue) ?></textarea>
-                </div>
-
-                <div>
-                    <label class="block text-sm font-medium mb-1" for="date_evenement">Date evenement</label>
-                    <input id="date_evenement" type="datetime-local" name="date_evenement" value="<?= htmlspecialchars($dateValue) ?>" required class="w-full px-3 py-2 border rounded">
-                </div>
-
-                <div>
-                    <label class="block text-sm font-medium mb-1" for="description_courte">Description courte (HTML)</label>
-                    <textarea id="description_courte" name="description_courte" rows="4" class="w-full px-3 py-2 border rounded" required><?= htmlspecialchars($descriptionValue) ?></textarea>
-                </div>
-
-                <div>
-                    <label class="block text-sm font-medium mb-1" for="id_article">Article lie (optionnel)</label>
-                    <select id="id_article" name="id_article" class="w-full px-3 py-2 border rounded">
-                        <option value="">Aucun article</option>
-                        <?php foreach ($articles as $article): ?>
-                            <?php $articleId = intval($article['id']); ?>
-                            <option value="<?= $articleId ?>" <?= strval($idArticleValue) === strval($articleId) ? 'selected' : '' ?>>
-                                #<?= $articleId ?> - <?= htmlspecialchars($article['slug']) ?>
-                            </option>
-                        <?php endforeach; ?>
-                    </select>
-                </div>
-
-                <div class="flex gap-3">
-                    <button type="submit" class="bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700">
-                        <?= $eventToEdit ? 'Mettre a jour' : 'Creer' ?>
-                    </button>
-                    <?php if ($eventToEdit): ?>
-                        <a href="/backoffice/chronologie" class="bg-gray-600 text-white px-4 py-2 rounded hover:bg-gray-700">Annuler l'edition</a>
-                    <?php endif; ?>
-                </div>
-            </form>
-        </section>
-
         <section class="bg-white p-6 rounded shadow">
-            <h3 class="text-xl font-semibold mb-4">Liste des evenements</h3>
+            <div class="flex items-center justify-between gap-3 mb-4">
+                <h3 class="text-xl font-semibold">Liste des evenements</h3>
+                <a href="<?= htmlspecialchars($createUrl) ?>" class="bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700 text-sm">Ajouter un evenement</a>
+            </div>
 
             <?php if (empty($events)): ?>
                 <p class="text-gray-600">Aucun evenement dans la chronologie.</p>
@@ -164,7 +103,7 @@ $idArticleValue = $eventToEdit['id_article'] ?? ($selectedArticleId > 0 ? $selec
                                 </div>
 
                                 <div class="flex gap-2">
-                                    <a href="/backoffice/chronologie/edit-<?= intval($event['id']) ?>" class="bg-yellow-500 text-white px-3 py-2 rounded hover:bg-yellow-600">Modifier</a>
+                                    <a href="/backoffice/chronologie/edit-<?= intval($event['id']) ?><?= $selectedArticleId > 0 ? '?article_id=' . $selectedArticleId : '' ?>" class="bg-yellow-500 text-white px-3 py-2 rounded hover:bg-yellow-600">Modifier</a>
 
                                     <form action="/backoffice/chronologie/traitement" method="post" onsubmit="return confirm('Supprimer cet evenement ?');">
                                         <input type="hidden" name="action" value="delete">
