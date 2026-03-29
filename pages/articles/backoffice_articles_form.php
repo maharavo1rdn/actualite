@@ -64,6 +64,8 @@ function sourceBadgeClass(string $type): string
     <script src="/assets/js/tailwind.js?v=20260329"></script>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link href="https://fonts.googleapis.com/css2?family=Geist:wght@400;500;600&family=Geist+Mono:wght@400;500&display=swap" rel="stylesheet">
+    <!-- TinyMCE CDN -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/tinymce/7.9.1/tinymce.min.js"></script>
     <style>
         body  { font-family: 'Geist', sans-serif; font-size: 15px; }
         .mono { font-family: 'Geist Mono', monospace; }
@@ -199,9 +201,10 @@ function sourceBadgeClass(string $type): string
                     <label class="block text-sm font-medium text-gray-700 mb-2">
                         Contenu <span class="mono text-xs text-red-400 font-normal ml-1">* HTML autorisé</span>
                     </label>
-                    <textarea name="contenu" required rows="14"
+                    <!-- Classe tinymce-editor pour ciblage TinyMCE -->
+                    <textarea name="contenu" id="contenu" rows="14"
                               placeholder="Rédigez le contenu HTML de l'article…"
-                              class="w-full mono text-sm px-3.5 py-2.5 border border-gray-200 rounded-lg bg-gray-50 focus:bg-white focus:border-gray-400 focus:outline-none transition-colors resize-y leading-relaxed"><?= htmlspecialchars($article['contenu'] ?? '') ?></textarea>
+                              class="tinymce-editor w-full mono text-sm px-3.5 py-2.5 border border-gray-200 rounded-lg bg-gray-50 focus:bg-white focus:border-gray-400 focus:outline-none transition-colors resize-y leading-relaxed"><?= $article['contenu'] ?? '' ?></textarea>
                 </div>
 
                 <?php if (!$isEdit): ?>
@@ -424,6 +427,40 @@ function sourceBadgeClass(string $type): string
 <?php endif; ?>
 
 <script>
+// ── TinyMCE ──────────────────────────────────────────────────────────────────
+// Remplace "no-api-key" dans le CDN par ta vraie clé sur https://www.tiny.cloud
+tinymce.init({
+    selector: 'textarea.tinymce-editor',
+    license_key: 'gpl',  
+    // language: 'fr_FR',
+    height: 500,
+    menubar: false,
+    branding: false,
+    plugins: [
+        'advlist', 'autolink', 'lists', 'link', 'image',
+        'charmap', 'preview', 'anchor', 'searchreplace',
+        'visualblocks', 'code', 'fullscreen',
+        'insertdatetime', 'media', 'table', 'help', 'wordcount'
+    ],
+    toolbar:
+        'undo redo | blocks | ' +
+        'bold italic underline strikethrough | forecolor backcolor | ' +
+        'alignleft aligncenter alignright alignjustify | ' +
+        'bullist numlist outdent indent | ' +
+        'link image media table | ' +
+        'removeformat code fullscreen | help',
+    content_style: "body { font-family: 'Geist', sans-serif; font-size: 15px; line-height: 1.6; padding: 12px; }",
+    setup: function(editor) {
+        editor.on('change', function() {
+            editor.save(); // synchronise le textarea caché
+        });
+    },
+    // Permet d'uploader des images directement dans l'éditeur (adapter l'URL si besoin)
+    // images_upload_url: '/backoffice/upload-image',
+    automatic_uploads: false,
+    file_picker_types: 'image',
+});
+
 // ── Onglets ─────────────────────────────────────────────────────────────────
 function switchTab(name) {
     const allBtns  = document.querySelectorAll('.tab-btn');
