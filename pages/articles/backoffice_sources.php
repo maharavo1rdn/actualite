@@ -78,6 +78,9 @@ function typeBadgeClass(string $libelle): string {
             <div class="flex items-center gap-2 flex-wrap justify-end text-sm">
                 <a href="/backoffice/articles" class="bg-gray-800 px-3 py-1 rounded hover:bg-gray-700">Articles</a>
                 <a href="/backoffice/sources" class="bg-blue-600 px-3 py-1 rounded hover:bg-blue-700">Sources</a>
+                <a href="/backoffice/categories" class="bg-gray-800 px-3 py-1 rounded hover:bg-gray-700">Categories</a>
+                <a href="/backoffice/types-sources" class="bg-gray-800 px-3 py-1 rounded hover:bg-gray-700">Types sources</a>
+                <a href="/backoffice/utilisateurs" class="bg-gray-800 px-3 py-1 rounded hover:bg-gray-700">Utilisateurs</a>
                 <a href="/backoffice/chronologie" class="bg-gray-800 px-3 py-1 rounded hover:bg-gray-700">Chronologie</a>
                 <a href="/" target="_blank" class="bg-gray-600 px-3 py-1 rounded hover:bg-gray-500 ml-2">↗ Front</a>
                 

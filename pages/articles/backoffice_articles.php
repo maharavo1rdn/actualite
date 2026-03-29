@@ -66,7 +66,10 @@ function buildPagerUrl(int $p): string
     <div class="container mx-auto px-6 h-14 flex items-center justify-between gap-4">
         <span class="mono text-sm tracking-tight">Info Iran / <span class="text-gray-400">articles</span></span>
         <div class="flex items-center gap-4">
+            <a href="/backoffice/categories" class="mono text-sm hover:text-gray-300 transition-colors">categories</a>
             <a href="/backoffice/sources" class="mono text-sm hover:text-gray-300 transition-colors">sources</a>
+            <a href="/backoffice/types-sources" class="mono text-sm hover:text-gray-300 transition-colors">types sources</a>
+            <a href="/backoffice/utilisateurs" class="mono text-sm hover:text-gray-300 transition-colors">utilisateurs</a>
             <a href="/backoffice/chronologie" class="mono text-sm hover:text-gray-300 transition-colors">chronologie</a>
             <a href="/" target="_blank" class="mono text-sm bg-gray-800 hover:bg-gray-700 px-3 py-1.5 rounded transition-colors">↗ front</a>
             <span class="mono text-sm text-gray-500"><?= $username ?></span>

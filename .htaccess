@@ -55,8 +55,20 @@ RewriteRule ^pages/articles/backoffice_articles_form\.php$ /backoffice/articles/
 RewriteCond %{THE_REQUEST} \s/+pages/articles/backoffice_sources\.php\s [NC]
 RewriteRule ^pages/articles/backoffice_sources\.php$ /backoffice/sources [R=301,L]
 
+RewriteCond %{THE_REQUEST} \s/+pages/articles/backoffice_categories\.php\s [NC]
+RewriteRule ^pages/articles/backoffice_categories\.php$ /backoffice/categories [R=301,L]
+
+RewriteCond %{THE_REQUEST} \s/+pages/articles/backoffice_types_sources\.php\s [NC]
+RewriteRule ^pages/articles/backoffice_types_sources\.php$ /backoffice/types-sources [R=301,L]
+
+RewriteCond %{THE_REQUEST} \s/+pages/articles/backoffice_utilisateurs\.php\s [NC]
+RewriteRule ^pages/articles/backoffice_utilisateurs\.php$ /backoffice/utilisateurs [R=301,L]
+
 RewriteCond %{THE_REQUEST} \s/+controllers/traitement_articles\.php\s [NC]
 RewriteRule ^controllers/traitement_articles\.php$ /backoffice/articles/traitement [R=301,L]
+
+RewriteCond %{THE_REQUEST} \s/+controllers/traitement_backoffice\.php\s [NC]
+RewriteRule ^controllers/traitement_backoffice\.php$ /backoffice/gestion/traitement [R=301,L]
 
 # ═══════════════════════════════════════════════════════════════════
 #  Fichiers et dossiers réels → servis directement (assets, etc.)
@@ -102,6 +114,18 @@ RewriteRule ^backoffice/articles/traitement/?$                  controllers/trai
 
 # Sources
 RewriteRule ^backoffice/sources/?$                              pages/articles/backoffice_sources.php [L,QSA]
+
+# Catégories
+RewriteRule ^backoffice/categories/?$                           pages/articles/backoffice_categories.php [L,QSA]
+
+# Types de sources
+RewriteRule ^backoffice/types-sources/?$                        pages/articles/backoffice_types_sources.php [L,QSA]
+
+# Utilisateurs
+RewriteRule ^backoffice/utilisateurs/?$                         pages/articles/backoffice_utilisateurs.php [L,QSA]
+
+# Traitement CRUD Backoffice
+RewriteRule ^backoffice/gestion/traitement/?$                   controllers/traitement_backoffice.php [L,QSA]
 
 # Racine backoffice → liste articles (point d'entrée principal)
 RewriteRule ^backoffice/?$                                      pages/articles/backoffice_articles.php [L,QSA]
