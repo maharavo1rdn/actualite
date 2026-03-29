@@ -113,8 +113,9 @@ function excerptFromHtml(string $html, int $length = 150): string
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Info Iran — Actualités</title>
-    <script src="/assets/js/tailwind.js"></script>
+    <script src="/assets/js/tailwind.js?v=20260329"></script>
     <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Geist:wght@400;500;600;700;800;900&family=Geist+Mono:wght@400;500&display=swap" rel="stylesheet">
     <style>
         body { font-family: 'Geist', sans-serif; }
@@ -177,6 +178,11 @@ function excerptFromHtml(string $html, int $length = 150): string
                 <img
                     src="<?= htmlspecialchars($featuredArticle['image_url'] ?? 'https://images.unsplash.com/photo-1504711434969-e33886168f5c?auto=format&fit=crop&w=1600&q=80') ?>"
                     alt="Image à la une"
+                    width="1600"
+                    height="900"
+                    fetchpriority="high"
+                    loading="eager"
+                    decoding="async"
                     class="absolute inset-0 w-full h-full object-cover">
                 <div class="absolute inset-0 bg-gradient-to-t from-slate-950 via-slate-900/50 to-transparent"></div>
                 <div class="relative z-10 p-7 md:p-10 text-white w-full">
@@ -212,6 +218,10 @@ function excerptFromHtml(string $html, int $length = 150): string
                                 <img
                                     src="<?= htmlspecialchars($article['image_url'] ?? 'https://images.unsplash.com/photo-1585829365295-ab7cd400c167?auto=format&fit=crop&w=900&q=80') ?>"
                                     alt="Miniature article"
+                                    width="900"
+                                    height="600"
+                                    loading="lazy"
+                                    decoding="async"
                                     class="w-full h-36 object-cover group-hover:scale-[1.02] transition-transform duration-300">
                                 <div class="p-4">
                                     <span class="inline-block text-[11px] uppercase font-bold px-2 py-0.5 rounded text-white mb-2 <?= categoryBadgeClass($categoryColors, $article['categorie_nom'] ?? 'Actualité') ?>">

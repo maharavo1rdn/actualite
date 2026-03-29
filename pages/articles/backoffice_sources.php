@@ -68,7 +68,7 @@ function typeBadgeClass(string $libelle): string {
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Sources — Backoffice Info Iran</title>
     <meta name="robots" content="noindex, nofollow">
-    <script src="/assets/js/tailwind.js"></script>
+    <script src="/assets/js/tailwind.js?v=20260329"></script>
 </head>
 <body class="bg-gray-100 min-h-screen">
 

@@ -53,8 +53,9 @@ function sourceBadge(string $type): string
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title><?= strip_tags($article['titre']) ?> — Info Iran</title>
-    <script src="/assets/js/tailwind.js"></script>
+    <script src="/assets/js/tailwind.js?v=20260329"></script>
     <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Geist:wght@400;500;600;700;800;900&family=Geist+Mono:wght@400;500&display=swap" rel="stylesheet">
     <style>
         body  { font-family: 'Geist', sans-serif; font-size: 15px; }
@@ -92,6 +93,11 @@ function sourceBadge(string $type): string
             <img
                 src="<?= htmlspecialchars($primaryImage['url_image'] ?? 'https://images.unsplash.com/photo-1541872703-74c5e44368f9?auto=format&fit=crop&w=1400&q=80') ?>"
                 alt="Image de couverture"
+                width="1400"
+                height="900"
+                fetchpriority="high"
+                loading="eager"
+                decoding="async"
                 class="w-full h-64 md:h-[28rem] object-cover">
             <?php if (!empty($primaryImage['legende'])): ?>
                 <p class="px-6 py-3 mono text-xs text-slate-500 bg-slate-50 border-t border-slate-200">

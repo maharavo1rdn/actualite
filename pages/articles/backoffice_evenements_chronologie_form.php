@@ -56,7 +56,7 @@ if ($selectedArticleId > 0) {
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title><?= $eventToEdit ? 'Modifier' : 'Ajouter' ?> un événement - Backoffice</title>
-    <script src="/assets/js/tailwind.js"></script>
+    <script src="/assets/js/tailwind.js?v=20260329"></script>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link href="https://fonts.googleapis.com/css2?family=Geist:wght@400;500;600&family=Geist+Mono:wght@400;500&display=swap" rel="stylesheet">
     <style>
