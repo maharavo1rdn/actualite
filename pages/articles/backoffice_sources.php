@@ -69,23 +69,28 @@ function typeBadgeClass(string $libelle): string {
     <title>Sources — Backoffice Info Iran</title>
     <meta name="robots" content="noindex, nofollow">
     <script src="/assets/js/tailwind.js?v=20260329"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <!-- Geist Sans (clean, neutral, great for UI) + Geist Mono (code-like, crisp) -->
+    <link href="https://fonts.googleapis.com/css2?family=Geist:wght@400;500;600&family=Geist+Mono:wght@400;500&display=swap" rel="stylesheet">
+    <style>
+        body  { font-family: 'Geist', sans-serif; font-size: 15px; }
+        .mono { font-family: 'Geist Mono', monospace; }
+    </style>
 </head>
 <body class="bg-gray-100 min-h-screen">
 
-    <header class="bg-black text-white p-4">
-        <div class="container mx-auto flex justify-between items-center">
-            <h1 class="text-xl font-bold">Backoffice Sources - Info Iran</h1>
-            <div class="flex items-center gap-2 flex-wrap justify-end text-sm">
-                <a href="/backoffice/articles" class="bg-gray-800 px-3 py-1 rounded hover:bg-gray-700">Articles</a>
-                <a href="/backoffice/sources" class="bg-blue-600 px-3 py-1 rounded hover:bg-blue-700">Sources</a>
-                <a href="/backoffice/categories" class="bg-gray-800 px-3 py-1 rounded hover:bg-gray-700">Categories</a>
-                <a href="/backoffice/types-sources" class="bg-gray-800 px-3 py-1 rounded hover:bg-gray-700">Types sources</a>
-                <a href="/backoffice/utilisateurs" class="bg-gray-800 px-3 py-1 rounded hover:bg-gray-700">Utilisateurs</a>
-                <a href="/backoffice/chronologie" class="bg-gray-800 px-3 py-1 rounded hover:bg-gray-700">Chronologie</a>
-                <a href="/" target="_blank" class="bg-gray-600 px-3 py-1 rounded hover:bg-gray-500 ml-2">↗ Front</a>
-                
-                <span class="mr-4 ml-4">Connecté en tant que <strong><?= $username ?></strong></span>
-                <a href="/deconnexion" class="bg-red-600 px-3 py-1 rounded hover:bg-red-700">Déconnexion</a>
+    <header class="bg-black text-white sticky top-0 z-10">
+        <div class="container mx-auto px-6 h-14 flex items-center justify-between gap-4">
+            <span class="mono text-sm tracking-tight">Info Iran / <span class="text-gray-400">articles</span></span>
+            <div class="flex items-center gap-4">
+                <a href="/backoffice/categories" class="mono text-sm hover:text-gray-300 transition-colors">categories</a>
+                <a href="/backoffice/sources" class="mono text-sm hover:text-gray-300 transition-colors">sources</a>
+                <a href="/backoffice/types-sources" class="mono text-sm hover:text-gray-300 transition-colors">types sources</a>
+                <a href="/backoffice/utilisateurs" class="mono text-sm hover:text-gray-300 transition-colors">utilisateurs</a>
+                <a href="/backoffice/chronologie" class="mono text-sm hover:text-gray-300 transition-colors">chronologie</a>
+                <a href="/" target="_blank" class="mono text-sm bg-gray-800 hover:bg-gray-700 px-3 py-1.5 rounded transition-colors">↗ front</a>
+                <span class="mono text-sm text-gray-500"><?= $username ?></span>
+                <a href="/deconnexion" class="mono text-sm text-red-400 hover:text-red-300 transition-colors">déconnexion</a>
             </div>
         </div>
     </header>
