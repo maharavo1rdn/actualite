@@ -59,6 +59,7 @@ if ($selectedArticleId > 0) {
     <script src="/assets/js/tailwind.js?v=20260329"></script>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link href="https://fonts.googleapis.com/css2?family=Geist:wght@400;500;600&family=Geist+Mono:wght@400;500&display=swap" rel="stylesheet">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/tinymce/7.9.1/tinymce.min.js"></script>
     <style>
         body  { font-family: 'Geist', sans-serif; font-size: 15px; }
         .mono { font-family: 'Geist Mono', monospace; }
@@ -123,13 +124,14 @@ if ($selectedArticleId > 0) {
                         <label class="block text-sm font-medium text-gray-700 mb-2" for="titre_evenement">
                             Titre <span class="mono text-xs text-gray-400 font-normal ml-1">HTML accepté</span>
                         </label>
+                        <!-- Classe tinymce-editor-sm pour un TinyMCE compact sur le titre -->
                         <textarea
                             id="titre_evenement"
                             name="titre_evenement"
-                            rows="2"
+                            rows="3"
                             required
-                            class="w-full mono text-sm px-3.5 py-2.5 border border-gray-200 rounded-lg bg-gray-50 focus:bg-white focus:border-gray-400 focus:outline-none transition-colors resize-none"
-                        ><?= htmlspecialchars($titreValue) ?></textarea>
+                            class="tinymce-editor-sm w-full mono text-sm px-3.5 py-2.5 border border-gray-200 rounded-lg bg-gray-50 focus:bg-white focus:border-gray-400 focus:outline-none transition-colors resize-none"
+                        ><?= $titreValue ?></textarea>
                     </div>
 
                     <!-- Date -->
@@ -152,13 +154,14 @@ if ($selectedArticleId > 0) {
                         <label class="block text-sm font-medium text-gray-700 mb-2" for="description_courte">
                             Description courte <span class="mono text-xs text-gray-400 font-normal ml-1">HTML accepté</span>
                         </label>
+                        <!-- Classe tinymce-editor pour TinyMCE standard sur la description -->
                         <textarea
                             id="description_courte"
                             name="description_courte"
                             rows="5"
                             required
-                            class="w-full mono text-sm px-3.5 py-2.5 border border-gray-200 rounded-lg bg-gray-50 focus:bg-white focus:border-gray-400 focus:outline-none transition-colors resize-y"
-                        ><?= htmlspecialchars($descriptionValue) ?></textarea>
+                            class="tinymce-editor w-full mono text-sm px-3.5 py-2.5 border border-gray-200 rounded-lg bg-gray-50 focus:bg-white focus:border-gray-400 focus:outline-none transition-colors resize-y"
+                        ><?= $descriptionValue ?></textarea>
                     </div>
 
                     <!-- Article lié -->
@@ -203,5 +206,53 @@ if ($selectedArticleId > 0) {
         </div>
 
     </main>
+
+<script>
+// ── TinyMCE ───────────────────────────────────────────────────────────────────
+// Remplace "no-api-key" dans le CDN par ta vraie clé sur https://www.tiny.cloud
+
+// Éditeur standard — pour la description courte
+tinymce.init({
+    selector: 'textarea.tinymce-editor',
+    license_key: 'gpl', 
+    // language: 'fr_FR',
+    height: 250,
+    menubar: false,
+    branding: false,
+    plugins: ['advlist', 'autolink', 'lists', 'link', 'charmap', 'preview', 'code', 'help', 'wordcount'],
+    toolbar:
+        'undo redo | blocks | ' +
+        'bold italic underline | forecolor | ' +
+        'alignleft aligncenter alignright | ' +
+        'bullist numlist | link | ' +
+        'removeformat code | help',
+    content_style: "body { font-family: 'Geist', sans-serif; font-size: 15px; line-height: 1.6; padding: 8px; }",
+    setup: function(editor) {
+        editor.on('change', function() {
+            editor.save(); // synchronise le textarea caché
+        });
+    },
+});
+
+// Éditeur compact — pour le titre (barre d'outils réduite)
+tinymce.init({
+    selector: 'textarea.tinymce-editor-sm',
+    license_key: 'gpl', 
+    // language: 'fr_FR',
+    height: 180,
+    menubar: false,
+    branding: false,
+    plugins: ['link', 'code'],
+    toolbar:
+        'undo redo | blocks | ' + 
+        'bold italic underline | forecolor | link | code',
+    content_style: "body { font-family: 'Geist', sans-serif; font-size: 15px; font-weight: 600; padding: 6px; }",
+    setup: function(editor) {
+        editor.on('change', function() {
+            editor.save(); // synchronise le textarea caché
+        });
+    },
+});
+</script>
 </body>
 </html>
