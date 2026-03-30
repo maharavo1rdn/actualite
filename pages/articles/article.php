@@ -1,8 +1,10 @@
 <?php
 
 require_once __DIR__ . '/../../services/ArticleService.php';
+require_once __DIR__ . '/../../services/ImageService.php';
 
 $articleService = new ArticleService();
+$imageService = new ImageService();
 $slug = trim($_GET['s'] ?? '');
 
 if ($slug === '') {
@@ -21,6 +23,11 @@ if (!$article) {
 $primaryImage = $articleService->getPrimaryImageByArticleId(intval($article['id']));
 $sources      = $articleService->getSourcesByArticleId(intval($article['id']));
 $timeline     = $articleService->getEventsByDayOfArticle($article['date_publication'], 10);
+
+$allImages = $imageService->getImagesByArticleId(intval($article['id']));
+if (empty($allImages) && $primaryImage) {
+    $allImages = [$primaryImage];
+}
 
 function formatDateArticleFr(string $dateInput): string
 {
