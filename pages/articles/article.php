@@ -62,6 +62,14 @@ function excerptForMeta(string $html, int $length = 160): string
     if (strlen($text) <= $length) return $text;
     return rtrim(substr($text, 0, $length)) . '...';
 }
+
+function resolveImageUrl(?string $url, string $fallback): string
+{
+    $candidate = trim((string)$url);
+    return $candidate !== '' ? $candidate : $fallback;
+}
+
+$coverImage = resolveImageUrl($primaryImage['url_image'] ?? null, '/assets/images/photo-1541872703-74c5e44368f9.jpeg');
 ?>
 <!DOCTYPE html>
 <html lang="fr">
@@ -70,6 +78,7 @@ function excerptForMeta(string $html, int $length = 160): string
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title><?= strip_tags($article['titre']) ?> — Info Iran</title>
     <meta name="description" content="<?= htmlspecialchars(excerptForMeta($article['contenu'] ?? '', 160)) ?>">
+    <link rel="preload" as="image" href="<?= htmlspecialchars($coverImage) ?>" fetchpriority="high">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link rel="preload" as="style" href="https://fonts.googleapis.com/css2?family=Geist:wght@400;500;600;700;800;900&family=Geist+Mono:wght@400;500&display=swap">
@@ -117,7 +126,7 @@ function excerptForMeta(string $html, int $length = 160): string
         <!-- ── COVER IMAGE ───────────────────── -->
         <section class="bg-white border border-slate-200 rounded-2xl overflow-hidden mb-7">
             <img
-                src="<?= htmlspecialchars($primaryImage['url_image'] ?? 'https://images.unsplash.com/photo-1541872703-74c5e44368f9?auto=format&fit=crop&w=1400&q=80') ?>"
+                src="<?= htmlspecialchars($coverImage) ?>"
                 alt="Image de couverture"
                 width="1400"
                 height="900"

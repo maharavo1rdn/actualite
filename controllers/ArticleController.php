@@ -413,10 +413,12 @@ class ArticleController
 
     private function uploadImageFile(array $file): ?string
     {
-        $allowed   = ['image/jpeg', 'image/png', 'image/webp', 'image/gif'];
+        $allowed   = ['image/jpeg', 'image/png', 'image/gif'];
         $uploadDir = __DIR__ . '/../assets/uploads/articles/';
+        $maxSize   = 8 * 1024 * 1024;
 
         if ($file['error'] !== UPLOAD_ERR_OK) return null;
+        if (($file['size'] ?? 0) <= 0 || ($file['size'] ?? 0) > $maxSize) return null;
 
         $finfo = finfo_open(FILEINFO_MIME_TYPE);
         $mime  = finfo_file($finfo, $file['tmp_name']);
@@ -428,14 +430,110 @@ class ArticleController
             mkdir($uploadDir, 0755, true);
         }
 
-        $ext      = strtolower(pathinfo($file['name'], PATHINFO_EXTENSION));
-        $filename = uniqid('img_', true) . '.' . $ext;
+        $extByMime = [
+            'image/jpeg' => 'jpg',
+            'image/png'  => 'png',
+            'image/gif'  => 'gif',
+        ];
 
-        if (!move_uploaded_file($file['tmp_name'], $uploadDir . $filename)) {
+        $ext = $extByMime[$mime] ?? null;
+        if ($ext === null) {
+            return null;
+        }
+
+        $filename = uniqid('img_', true) . '.' . $ext;
+        $destPath = $uploadDir . $filename;
+
+        if ($this->optimizeImageFile($file['tmp_name'], $destPath, $mime)) {
+            return '/assets/uploads/articles/' . $filename;
+        }
+
+        if (!move_uploaded_file($file['tmp_name'], $destPath)) {
             return null;
         }
 
         return '/assets/uploads/articles/' . $filename;
+    }
+
+    private function optimizeImageFile(string $sourcePath, string $destPath, string $mime): bool
+    {
+        if (!function_exists('imagecreatetruecolor') || !function_exists('getimagesize')) {
+            return false;
+        }
+
+        $size = @getimagesize($sourcePath);
+        if (!$size) {
+            return false;
+        }
+
+        [$width, $height] = $size;
+        if ($width <= 0 || $height <= 0) {
+            return false;
+        }
+
+        $createByMime = [
+            'image/jpeg' => 'imagecreatefromjpeg',
+            'image/png'  => 'imagecreatefrompng',
+            'image/gif'  => 'imagecreatefromgif',
+        ];
+
+        $loader = $createByMime[$mime] ?? null;
+        if ($loader === null || !function_exists($loader)) {
+            return false;
+        }
+
+        $sourceImage = @$loader($sourcePath);
+        if (!$sourceImage) {
+            return false;
+        }
+
+        $maxWidth  = 1600;
+        $maxHeight = 1200;
+        $ratio     = min($maxWidth / $width, $maxHeight / $height, 1.0);
+        $targetW   = max(1, (int) floor($width * $ratio));
+        $targetH   = max(1, (int) floor($height * $ratio));
+
+        $targetImage = imagecreatetruecolor($targetW, $targetH);
+        if (!$targetImage) {
+            imagedestroy($sourceImage);
+            return false;
+        }
+
+        if ($mime === 'image/png' || $mime === 'image/gif') {
+            imagealphablending($targetImage, false);
+            imagesavealpha($targetImage, true);
+            $transparent = imagecolorallocatealpha($targetImage, 0, 0, 0, 127);
+            imagefill($targetImage, 0, 0, $transparent);
+        }
+
+        $okResize = imagecopyresampled(
+            $targetImage,
+            $sourceImage,
+            0,
+            0,
+            0,
+            0,
+            $targetW,
+            $targetH,
+            $width,
+            $height
+        );
+
+        $okWrite = false;
+        if ($okResize) {
+            if ($mime === 'image/jpeg') {
+                $okWrite = imagejpeg($targetImage, $destPath, 80);
+            } elseif ($mime === 'image/png') {
+                $okWrite = imagepng($targetImage, $destPath, 7);
+            } elseif ($mime === 'image/gif') {
+                $okWrite = imagegif($targetImage, $destPath);
+            }
+        }
+
+        imagedestroy($targetImage);
+        imagedestroy($sourceImage);
+
+        return $okWrite;
     }
 
     private function deleteImageFile(string $urlImage): void
