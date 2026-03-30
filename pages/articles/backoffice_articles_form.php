@@ -11,6 +11,7 @@ if (!isset($_SESSION['user'])) {
 }
 
 require_once __DIR__ . '/../../controllers/ArticleController.php';
+require_once __DIR__ . '/partials/backoffice_nav.php';
 
 $controller = new ArticleController();
 $username   = htmlspecialchars($_SESSION['user']['pseudo'] ?? 'Rédacteur');
@@ -77,18 +78,7 @@ function sourceBadgeClass(string $type): string
 </head>
 <body class="bg-gray-100 min-h-screen">
 
-<header class="bg-black text-white sticky top-0 z-10">
-    <div class="container mx-auto px-6 h-14 flex items-center justify-between gap-4">
-        <span class="mono text-sm tracking-tight">
-            Info Iran / <a href="/backoffice/articles" class="text-gray-400 hover:text-white transition-colors">articles</a> / <span class="text-white"><?= $isEdit ? 'éditer' : 'nouveau' ?></span>
-        </span>
-        <div class="flex items-center gap-4">
-            <a href="/backoffice/articles" class="mono text-sm bg-gray-800 hover:bg-gray-700 px-3 py-1.5 rounded transition-colors">← liste</a>
-            <span class="mono text-sm text-gray-500"><?= $username ?></span>
-            <a href="/deconnexion" class="mono text-sm text-red-400 hover:text-red-300 transition-colors">Déconnexion</a>
-        </div>
-    </div>
-</header>
+<?php renderBackofficeNavbar('articles', $username); ?>
 
 <main class="container mx-auto px-6 py-10 max-w-5xl">
 
