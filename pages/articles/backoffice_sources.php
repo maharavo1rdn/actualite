@@ -68,6 +68,7 @@ function typeBadgeClass(string $libelle): string {
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Sources — Backoffice Info Iran</title>
+    <meta name="description" content="Backoffice sources Info Iran : administrez les références, leurs types et leur rattachement aux articles.">
     <meta name="robots" content="noindex, nofollow">
     <script src="/assets/js/tailwind.js?v=20260329"></script>
     <link rel="preconnect" href="https://fonts.googleapis.com">

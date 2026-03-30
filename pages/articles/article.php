@@ -46,6 +46,22 @@ function sourceBadge(string $type): string
         default    => 'bg-slate-700',
     };
 }
+
+function excerptForMeta(string $html, int $length = 160): string
+{
+    $text = trim(preg_replace('/\s+/', ' ', strip_tags($html)) ?? '');
+    if ($text === '') {
+        return 'Consultez cet article Info Iran avec contexte, chronologie et sources associees.';
+    }
+
+    if (function_exists('mb_strlen') && function_exists('mb_substr')) {
+        if (mb_strlen($text) <= $length) return $text;
+        return rtrim(mb_substr($text, 0, $length)) . '...';
+    }
+
+    if (strlen($text) <= $length) return $text;
+    return rtrim(substr($text, 0, $length)) . '...';
+}
 ?>
 <!DOCTYPE html>
 <html lang="fr">
@@ -53,6 +69,7 @@ function sourceBadge(string $type): string
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title><?= strip_tags($article['titre']) ?> — Info Iran</title>
+    <meta name="description" content="<?= htmlspecialchars(excerptForMeta($article['contenu'] ?? '', 160)) ?>">
     <script src="/assets/js/tailwind.js?v=20260329"></script>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
