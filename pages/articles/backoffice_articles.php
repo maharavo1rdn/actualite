@@ -54,7 +54,7 @@ function buildPagerUrl(int $p): string
     <title>Articles — Backoffice Info Iran</title>
     <meta name="description" content="Backoffice articles Info Iran : consultez, filtrez, créez et modifiez les publications avec gestion des dates et catégories.">
     <meta name="robots" content="noindex, nofollow">
-    <script src="/assets/js/tailwind.js?v=20260329"></script>
+    <link rel="stylesheet" href="/assets/css/app.min.css?v=20260330">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link href="https://fonts.googleapis.com/css2?family=Geist:wght@400;500;600&family=Geist+Mono:wght@400;500&display=swap" rel="stylesheet">
     <style>

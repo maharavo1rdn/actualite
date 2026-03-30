@@ -57,7 +57,7 @@ function buildCategoryPagerUrl(int $p): string
     <title>Catégories — Backoffice Info Iran</title>
     <meta name="description" content="Backoffice catégories Info Iran : gérez la taxonomie des contenus avec recherche, ajout, modification et suppression de catégories.">
     <meta name="robots" content="noindex, nofollow">
-    <script src="/assets/js/tailwind.js?v=20260329"></script>
+    <link rel="stylesheet" href="/assets/css/app.min.css?v=20260330">    
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link href="https://fonts.googleapis.com/css2?family=Geist:wght@400;500;600&family=Geist+Mono:wght@400;500&display=swap" rel="stylesheet">
     <style>
