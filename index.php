@@ -113,6 +113,7 @@ function excerptFromHtml(string $html, int $length = 150): string
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Info Iran — Actualités</title>
+    <meta name="description" content="Suivez l'actualité Info Iran : analyses, chronologie des événements, articles récents et sources vérifiées en continu.">
     <script src="/assets/js/tailwind.js?v=20260329"></script>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -242,18 +243,18 @@ function excerptFromHtml(string $html, int $length = 150): string
             </section>
 
             <!-- Live sidebar -->
-            <aside class="bg-slate-950 text-slate-100 rounded-2xl p-6 border border-slate-800">
+            <aside class="bg-slate-950 text-slate-50 rounded-2xl p-6 border border-slate-800">
                 <h2 class="text-base font-black uppercase tracking-widest mb-5 flex items-center gap-2">
                     <span class="inline-block w-2 h-2 rounded-full bg-red-500 animate-pulse"></span>
                     Fil du direct
                 </h2>
                 <?php if (empty($liveEvents)): ?>
-                    <p class="text-sm text-slate-500">Aucun événement pour le moment.</p>
+                    <p class="text-sm text-slate-300">Aucun événement pour le moment.</p>
                 <?php else: ?>
                     <div class="space-y-5">
                         <?php foreach ($liveEvents as $event): ?>
                             <article class="border-l-2 border-red-600 pl-3.5">
-                                <p class="mono text-xs text-slate-500 mb-1">
+                                <p class="mono text-xs text-slate-300 mb-1">
                                     <?= htmlspecialchars(date('H:i', strtotime($event['date_evenement']))) ?>
                                 </p>
                                 <div class="text-sm leading-snug text-slate-200">

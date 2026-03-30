@@ -50,6 +50,7 @@ function buildUsersPagerUrl(int $p): string
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Utilisateurs — Backoffice Info Iran</title>
+    <meta name="description" content="Backoffice utilisateurs Info Iran : gérez les comptes, rôles et droits d'accès de l'équipe éditoriale.">
     <meta name="robots" content="noindex, nofollow">
     <script src="/assets/js/tailwind.js?v=20260329"></script>
     <link rel="preconnect" href="https://fonts.googleapis.com">

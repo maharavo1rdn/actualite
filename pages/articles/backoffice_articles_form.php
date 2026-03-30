@@ -61,6 +61,7 @@ function sourceBadgeClass(string $type): string
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title><?= $isEdit ? 'Éditer article #' . $articleId : 'Nouvel article' ?> — Backoffice Info Iran</title>
+    <meta name="description" content="Formulaire backoffice Info Iran pour créer ou éditer un article, gérer le titre, le contenu, les images et les sources liées.">
     <meta name="robots" content="noindex, nofollow">
     <script src="/assets/js/tailwind.js?v=20260329"></script>
     <link rel="preconnect" href="https://fonts.googleapis.com">
