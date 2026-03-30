@@ -10,6 +10,7 @@ if (!isset($_SESSION['user'])) {
 }
 
 require_once __DIR__ . '/../../controllers/BackofficeController.php';
+require_once __DIR__ . '/partials/backoffice_nav.php';
 
 $controller = new BackofficeController();
 $username = htmlspecialchars($_SESSION['user']['pseudo'] ?? 'Rédacteur');
@@ -65,21 +66,7 @@ function buildCategoryPagerUrl(int $p): string
 </head>
 <body class="bg-gray-100 min-h-screen">
 
-<header class="bg-black text-white sticky top-0 z-10">
-    <div class="container mx-auto px-6 h-14 flex items-center justify-between gap-4">
-        <span class="mono text-sm tracking-tight">Info Iran / <span class="text-gray-400">Categories</span></span>
-        <div class="flex items-center gap-4">
-            <a href="/backoffice/articles" class="mono text-sm hover:text-gray-300 transition-colors">Articles</a>
-            <a href="/backoffice/sources" class="mono text-sm hover:text-gray-300 transition-colors">Sources</a>
-            <a href="/backoffice/chronologie" class="mono text-sm hover:text-gray-300 transition-colors">Chronologie</a>
-            <a href="/backoffice/types-sources" class="mono text-sm hover:text-gray-300 transition-colors">Types sources</a>
-            <a href="/backoffice/utilisateurs" class="mono text-sm hover:text-gray-300 transition-colors">Utilisateurs</a>
-            <a href="/" target="_blank" class="mono text-sm bg-gray-800 hover:bg-gray-700 px-3 py-1.5 rounded transition-colors">↗ Front</a>
-            <span class="mono text-sm text-gray-500"><?= $username ?></span>
-            <a href="/deconnexion" class="mono text-sm text-red-400 hover:text-red-300 transition-colors">Déconnexion</a>
-        </div>
-    </div>
-</header>
+<?php renderBackofficeNavbar('categories', $username); ?>
 
 <main class="container mx-auto px-6 py-10 max-w-[90rem]">
 

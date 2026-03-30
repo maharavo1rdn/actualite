@@ -8,6 +8,7 @@ if (!isset($_SESSION['user'])) {
 $username = htmlspecialchars($_SESSION['user']['pseudo']);
 
 require_once __DIR__ . '/../../controllers/AuthController.php';
+require_once __DIR__ . '/partials/backoffice_nav.php';
 
 $controller = new AuthController();
 $articles = $controller->listArticles();
@@ -67,20 +68,7 @@ if ($selectedArticleId > 0) {
 </head>
 <body class="bg-gray-100 min-h-screen">
 
-    <!-- Header -->
-    <header class="bg-black text-white sticky top-0 z-10">
-        <div class="container mx-auto px-6 h-14 flex items-center justify-between gap-4">
-            <span class="mono text-sm tracking-tight">
-                Info Actualite / <a href="/backoffice/chronologie" class="text-gray-400 hover:text-white transition-colors">Chronologie</a> / <span class="text-white"><?= $eventToEdit ? 'modifier' : 'ajouter' ?></span>
-            </span>
-            <div class="flex items-center gap-4">
-                <a href="/backoffice" class="mono text-sm bg-gray-800 hover:bg-gray-700 px-3 py-1.5 rounded transition-colors">← Articles</a>
-                <a href="<?= htmlspecialchars($backToListUrl) ?>" class="mono text-sm bg-gray-800 hover:bg-gray-700 px-3 py-1.5 rounded transition-colors">← événements</a>
-                <span class="mono text-sm text-gray-500"><?= $username ?></span>
-                <a href="/deconnexion" class="mono text-sm text-red-400 hover:text-red-300 transition-colors">Déconnexion</a>
-            </div>
-        </div>
-    </header>
+    <?php renderBackofficeNavbar('chronologie', $username); ?>
 
     <main class="container mx-auto px-6 py-10 max-w-2xl">
 
