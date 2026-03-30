@@ -141,7 +141,7 @@ function sourceBadge(string $type): string
                 <?php endif; ?>
 
                 <a href="/" class="mono inline-block mt-6 text-xs text-red-400 hover:text-red-300 transition-colors">
-                    → voir le direct complet
+                    → Voir le direct complet
                 </a>
             </aside>
 
