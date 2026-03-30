@@ -131,21 +131,69 @@ $coverImage = resolveImageUrl($primaryImage['url_image'] ?? null, '/assets/image
         </section>
 
         <!-- ── COVER IMAGE ───────────────────── -->
-        <section class="bg-white border border-slate-200 rounded-2xl overflow-hidden mb-7">
-            <img
-                src="<?= htmlspecialchars($coverImage) ?>"
-                alt="Image de couverture"
-                width="1400"
-                height="900"
-                fetchpriority="high"
-                loading="eager"
-                decoding="async"
-                class="w-full h-64 md:h-[28rem] object-cover">
-            <?php if (!empty($primaryImage['legende'])): ?>
-                <p class="px-6 py-3 mono text-xs text-slate-600 bg-slate-50 border-t border-slate-200">
-                    <?= htmlspecialchars($primaryImage['legende']) ?>
-                </p>
+        <section class="bg-white border border-slate-200 rounded-2xl overflow-hidden mb-7 relative" id="carousel-wrapper">
+
+            <?php if (count($allImages) > 1): ?>
+                <!-- Slides -->
+                <div id="carousel-track" class="relative w-full overflow-hidden">
+                    <?php foreach ($allImages as $i => $img): ?>
+                        <?php $url = resolveImageUrl($img['url_image'] ?? null, '/assets/images/photo-1541872703-74c5e44368f9.jpeg'); ?>
+                        <div class="carousel-slide <?= $i === 0 ? '' : 'hidden' ?>" data-index="<?= $i ?>">
+                            <img
+                                src="<?= htmlspecialchars($url) ?>"
+                                alt="Image <?= $i + 1 ?>"
+                                width="1400" height="900"
+                                <?= $i === 0 ? 'fetchpriority="high" loading="eager"' : 'loading="lazy"' ?>
+                                decoding="async"
+                                class="w-full h-64 md:h-[28rem] object-cover">
+                            <?php if (!empty($img['legende'])): ?>
+                                <p class="px-6 py-3 mono text-xs text-slate-600 bg-slate-50 border-t border-slate-200">
+                                    <?= htmlspecialchars($img['legende']) ?>
+                                </p>
+                            <?php endif; ?>
+                        </div>
+                    <?php endforeach; ?>
+                </div>
+
+                <!-- Prev / Next -->
+                <button onclick="carouselMove(-1)" aria-label="Image précédente"
+                    class="absolute left-3 top-1/2 -translate-y-1/2 bg-slate-900/70 hover:bg-slate-900 text-white rounded-full w-9 h-9 flex items-center justify-center transition-colors z-10">
+                    &#8592;
+                </button>
+                <button onclick="carouselMove(1)" aria-label="Image suivante"
+                    class="absolute right-3 top-1/2 -translate-y-1/2 bg-slate-900/70 hover:bg-slate-900 text-white rounded-full w-9 h-9 flex items-center justify-center transition-colors z-10">
+                    &#8594;
+                </button>
+
+                <!-- Dots -->
+                <div class="absolute bottom-3 left-1/2 -translate-x-1/2 flex gap-1.5 z-10">
+                    <?php foreach ($allImages as $i => $img): ?>
+                        <button onclick="carouselGoTo(<?= $i ?>)"
+                            class="carousel-dot w-2 h-2 rounded-full transition-colors <?= $i === 0 ? 'bg-white' : 'bg-white/40' ?>"
+                            data-index="<?= $i ?>"></button>
+                    <?php endforeach; ?>
+                </div>
+
+                <!-- Compteur -->
+                <div class="absolute top-3 right-3 bg-slate-900/60 text-white mono text-xs px-2.5 py-1 rounded-md z-10">
+                    <span id="carousel-counter">1</span> / <?= count($allImages) ?>
+                </div>
+
+            <?php else: ?>
+                <!-- Image unique — comportement original -->
+                <img
+                    src="<?= htmlspecialchars($coverImage) ?>"
+                    alt="Image de couverture"
+                    width="1400" height="900"
+                    fetchpriority="high" loading="eager" decoding="async"
+                    class="w-full h-64 md:h-[28rem] object-cover">
+                <?php if (!empty($primaryImage['legende'])): ?>
+                    <p class="px-6 py-3 mono text-xs text-slate-600 bg-slate-50 border-t border-slate-200">
+                        <?= htmlspecialchars($primaryImage['legende']) ?>
+                    </p>
+                <?php endif; ?>
             <?php endif; ?>
+
         </section>
 
         <!-- ── CONTENT + SIDEBAR ─────────────── -->
