@@ -274,7 +274,7 @@ function sourceBadgeClass(string $type): string
                         <?php foreach ($images as $img): ?>
                         <div class="border border-gray-200 rounded-xl overflow-hidden flex flex-col group">
                             <div class="relative h-36 bg-gray-100">
-                                <img src="<?= htmlspecialchars($img['url_image']) ?>" alt="<?= htmlspecialchars($img['legende'] ?? '') ?>" class="w-full h-full object-cover">
+                                <img src="<?= htmlspecialchars($img['url_image']) ?>" alt="<?= htmlspecialchars($img['legende'] ?? 'Image article : ' . $article['slug']) ?>" class="w-full h-full object-cover">
                             </div>
                             <div class="p-3 bg-white flex flex-col flex-1">
                                 <p class="mono text-xs text-gray-500 truncate mb-3 flex-1">
