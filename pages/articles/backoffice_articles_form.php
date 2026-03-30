@@ -85,7 +85,7 @@ function sourceBadgeClass(string $type): string
         <div class="flex items-center gap-4">
             <a href="/backoffice/articles" class="mono text-sm bg-gray-800 hover:bg-gray-700 px-3 py-1.5 rounded transition-colors">← liste</a>
             <span class="mono text-sm text-gray-500"><?= $username ?></span>
-            <a href="/deconnexion" class="mono text-sm text-red-400 hover:text-red-300 transition-colors">déconnexion</a>
+            <a href="/deconnexion" class="mono text-sm text-red-400 hover:text-red-300 transition-colors">Déconnexion</a>
         </div>
     </div>
 </header>
