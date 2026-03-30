@@ -81,7 +81,7 @@ function typeBadgeClass(string $libelle): string {
 
     <header class="bg-black text-white sticky top-0 z-10">
         <div class="container mx-auto px-6 h-14 flex items-center justify-between gap-4">
-            <span class="mono text-sm tracking-tight">Info Iran / <span class="text-gray-400">articles</span></span>
+            <span class="mono text-sm tracking-tight">Info Iran / <span class="text-gray-400">Articles</span></span>
             <div class="flex items-center gap-4">
                 <a href="/backoffice/categories" class="mono text-sm hover:text-gray-300 transition-colors">Categories</a>
                 <a href="/backoffice/sources" class="mono text-sm hover:text-gray-300 transition-colors">Sources</a>
