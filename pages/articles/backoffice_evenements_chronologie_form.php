@@ -71,7 +71,7 @@ if ($selectedArticleId > 0) {
     <header class="bg-black text-white sticky top-0 z-10">
         <div class="container mx-auto px-6 h-14 flex items-center justify-between gap-4">
             <span class="mono text-sm tracking-tight">
-                Info Actualite / <a href="/backoffice/chronologie" class="text-gray-400 hover:text-white transition-colors">chronologie</a> / <span class="text-white"><?= $eventToEdit ? 'modifier' : 'ajouter' ?></span>
+                Info Actualite / <a href="/backoffice/chronologie" class="text-gray-400 hover:text-white transition-colors">Chronologie</a> / <span class="text-white"><?= $eventToEdit ? 'modifier' : 'ajouter' ?></span>
             </span>
             <div class="flex items-center gap-4">
                 <a href="/backoffice" class="mono text-sm bg-gray-800 hover:bg-gray-700 px-3 py-1.5 rounded transition-colors">← articles</a>

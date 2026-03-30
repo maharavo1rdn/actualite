@@ -70,11 +70,11 @@ function buildCategoryPagerUrl(int $p): string
         <span class="mono text-sm tracking-tight">Info Iran / <span class="text-gray-400">categories</span></span>
         <div class="flex items-center gap-4">
             <a href="/backoffice/articles" class="mono text-sm hover:text-gray-300 transition-colors">articles</a>
-            <a href="/backoffice/sources" class="mono text-sm hover:text-gray-300 transition-colors">sources</a>
-            <a href="/backoffice/chronologie" class="mono text-sm hover:text-gray-300 transition-colors">chronologie</a>
-            <a href="/backoffice/types-sources" class="mono text-sm hover:text-gray-300 transition-colors">types sources</a>
-            <a href="/backoffice/utilisateurs" class="mono text-sm hover:text-gray-300 transition-colors">utilisateurs</a>
-            <a href="/" target="_blank" class="mono text-sm bg-gray-800 hover:bg-gray-700 px-3 py-1.5 rounded transition-colors">↗ front</a>
+            <a href="/backoffice/sources" class="mono text-sm hover:text-gray-300 transition-colors">Sources</a>
+            <a href="/backoffice/chronologie" class="mono text-sm hover:text-gray-300 transition-colors">Chronologie</a>
+            <a href="/backoffice/types-sources" class="mono text-sm hover:text-gray-300 transition-colors">Types sources</a>
+            <a href="/backoffice/utilisateurs" class="mono text-sm hover:text-gray-300 transition-colors">Utilisateurs</a>
+            <a href="/" target="_blank" class="mono text-sm bg-gray-800 hover:bg-gray-700 px-3 py-1.5 rounded transition-colors">↗ Front</a>
             <span class="mono text-sm text-gray-500"><?= $username ?></span>
             <a href="/deconnexion" class="mono text-sm text-red-400 hover:text-red-300 transition-colors">déconnexion</a>
         </div>
