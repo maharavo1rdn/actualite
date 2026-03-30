@@ -114,8 +114,7 @@ function excerptFromHtml(string $html, int $length = 150): string
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Info Iran — Actualités</title>
     <meta name="description" content="Suivez l'actualité Info Iran : analyses, chronologie des événements, articles récents et sources vérifiées en continu.">
-    <script src="/assets/js/tailwind.js?v=20260329"></script>
-    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="stylesheet" href="/assets/css/app.min.css?v=20260330">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Geist:wght@400;500;600;700;800;900&family=Geist+Mono:wght@400;500&display=swap" rel="stylesheet">
     <style>

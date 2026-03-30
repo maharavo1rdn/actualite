@@ -58,7 +58,7 @@ if ($selectedArticleId > 0) {
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title><?= $eventToEdit ? 'Modifier' : 'Ajouter' ?> un événement - Backoffice</title>
     <meta name="description" content="Formulaire backoffice de chronologie pour ajouter ou modifier un événement, son titre, sa date et son article lié.">
-    <script src="/assets/js/tailwind.js?v=20260329"></script>
+    <link rel="stylesheet" href="/assets/css/app.min.css?v=20260330">    
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link href="https://fonts.googleapis.com/css2?family=Geist:wght@400;500;600&family=Geist+Mono:wght@400;500&display=swap" rel="stylesheet">
     <script src="https://cdnjs.cloudflare.com/ajax/libs/tinymce/7.9.1/tinymce.min.js"></script>

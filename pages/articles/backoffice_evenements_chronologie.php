@@ -126,7 +126,7 @@ if ($queryString !== '') {
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Backoffice Chronologie - Info Actualite</title>
     <meta name="description" content="Backoffice chronologie Info Actualité : suivez, filtrez et administrez les événements liés aux articles en temps réel.">
-    <script src="/assets/js/tailwind.js?v=20260329"></script>
+    <link rel="stylesheet" href="/assets/css/app.min.css?v=20260330">    
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <!-- Geist Sans (clean, neutral, great for UI) + Geist Mono (code-like, crisp) -->
     <link href="https://fonts.googleapis.com/css2?family=Geist:wght@400;500;600&family=Geist+Mono:wght@400;500&display=swap" rel="stylesheet">

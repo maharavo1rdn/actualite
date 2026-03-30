@@ -70,7 +70,7 @@ function typeBadgeClass(string $libelle): string {
     <title>Sources — Backoffice Info Iran</title>
     <meta name="description" content="Backoffice sources Info Iran : administrez les références, leurs types et leur rattachement aux articles.">
     <meta name="robots" content="noindex, nofollow">
-    <script src="/assets/js/tailwind.js?v=20260329"></script>
+    <link rel="stylesheet" href="/assets/css/app.min.css?v=20260330">    
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <!-- Geist Sans (clean, neutral, great for UI) + Geist Mono (code-like, crisp) -->
     <link href="https://fonts.googleapis.com/css2?family=Geist:wght@400;500;600&family=Geist+Mono:wght@400;500&display=swap" rel="stylesheet">
