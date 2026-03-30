@@ -114,15 +114,34 @@ function excerptFromHtml(string $html, int $length = 150): string
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Info Iran — Actualités</title>
     <meta name="description" content="Suivez l'actualité Info Iran : analyses, chronologie des événements, articles récents et sources vérifiées en continu.">
-    <link rel="stylesheet" href="/assets/css/app.min.css?v=20260330">
+    
+    <!-- 1. OPTIMISATION GOOGLE FONTS -->
+    <!-- Préconnexion aux serveurs -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Geist:wght@400;500;600;700;800;900&family=Geist+Mono:wght@400;500&display=swap" rel="stylesheet">
+    
+    <!-- Préchargement et chargement asynchrone pour ne pas bloquer le rendu -->
+    <link rel="preload" as="style" href="https://fonts.googleapis.com/css2?family=Geist:wght@400;500;600;700;800;900&family=Geist+Mono:wght@400;500&display=swap">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Geist:wght@400;500;600;700;800;900&family=Geist+Mono:wght@400;500&display=swap" media="print" onload="this.media='all'">
+    
+    <!-- Fallback si le JavaScript est désactivé -->
+    <noscript>
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Geist:wght@400;500;600;700;800;900&family=Geist+Mono:wght@400;500&display=swap">
+    </noscript>
+
+    <!-- 2. OPTIMISATION CSS LOCAL -->
+    <!-- L'inlining du CSS supprime totalement la requête réseau bloquante -->
     <style>
+        <?php 
+        $cssPath = __DIR__ . '/assets/css/app.min.css';
+        if (file_exists($cssPath)) {
+            echo file_get_contents($cssPath);
+        }
+        ?>
         body { font-family: 'Geist', sans-serif; }
         .mono { font-family: 'Geist Mono', monospace; }
     </style>
 </head>
-
 <body class="bg-slate-100 text-slate-900">
 
     <!-- ── HEADER ───────────────────────────── -->

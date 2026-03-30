@@ -63,12 +63,22 @@ function sourceBadgeClass(string $type): string
     <title><?= $isEdit ? 'Éditer article #' . $articleId : 'Nouvel article' ?> — Backoffice Info Iran</title>
     <meta name="description" content="Formulaire backoffice Info Iran pour créer ou éditer un article, gérer le titre, le contenu, les images et les sources liées.">
     <meta name="robots" content="noindex, nofollow">
-    <link rel="stylesheet" href="/assets/css/app.min.css?v=20260330">    
     <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link href="https://fonts.googleapis.com/css2?family=Geist:wght@400;500;600&family=Geist+Mono:wght@400;500&display=swap" rel="stylesheet">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link rel="preload" as="style" href="https://fonts.googleapis.com/css2?family=Geist:wght@400;500;600;700;800;900&family=Geist+Mono:wght@400;500&display=swap">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Geist:wght@400;500;600;700;800;900&family=Geist+Mono:wght@400;500&display=swap" media="print" onload="this.media='all'">
+    <noscript>
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Geist:wght@400;500;600;700;800;900&family=Geist+Mono:wght@400;500&display=swap">
+    </noscript>
     <!-- TinyMCE CDN -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/tinymce/7.9.1/tinymce.min.js"></script>
     <style>
+        <?php
+        $cssPath = __DIR__ . '/../../assets/css/app.min.css';
+        if (file_exists($cssPath)) {
+            echo file_get_contents($cssPath);
+        }
+        ?>
         body  { font-family: 'Geist', sans-serif; font-size: 15px; }
         .mono { font-family: 'Geist Mono', monospace; }
         .tab-pane { display: none; }
