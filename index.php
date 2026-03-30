@@ -211,7 +211,7 @@ function resolveImageUrl(?string $url, string $fallback): string
             <section class="relative overflow-hidden rounded-2xl mb-7 min-h-[22rem] flex items-end">
                 <img
                     src="<?= htmlspecialchars($featuredImage) ?>"
-                    alt="Image à la une"
+                    alt="<?= !empty($featuredArticle['image_legende'])?$featuredArticle['image_legende']:'Image à la une' ?>"
                     width="1600"
                     height="900"
                     fetchpriority="high"
@@ -254,7 +254,7 @@ function resolveImageUrl(?string $url, string $fallback): string
                             <article class="border border-slate-100 rounded-xl overflow-hidden bg-white hover:shadow-md transition-shadow group">
                                 <img
                                     src="<?= htmlspecialchars($cardImage) ?>"
-                                    alt="Miniature article"
+                                    alt="<?= !empty($article['image_legende'])?$article['image_legende']:'Image article recente' ?>"
                                     width="900"
                                     height="600"
                                     loading="lazy"

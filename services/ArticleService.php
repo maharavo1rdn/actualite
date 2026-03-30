@@ -221,4 +221,17 @@ class ArticleService
         $stmt->execute();
         return $stmt->fetchAll(PDO::FETCH_ASSOC);
     }
+
+    public function getAllImagesByArticleId(int $articleId): array
+    {
+        $sql = '
+            SELECT id, id_article, url_image, legende
+            FROM articles_images
+            WHERE id_article = :article_id
+            ORDER BY id ASC
+        ';
+        $stmt = $this->db->prepare($sql);
+        $stmt->execute(['article_id' => $articleId]);
+        return $stmt->fetchAll(PDO::FETCH_ASSOC);
+    }
 }
