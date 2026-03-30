@@ -211,7 +211,7 @@ function resolveImageUrl(?string $url, string $fallback): string
             <section class="relative overflow-hidden rounded-2xl mb-7 min-h-[22rem] flex items-end">
                 <img
                     src="<?= htmlspecialchars($featuredImage) ?>"
-                    alt="Image à la une"
+                    alt="<?= !empty($featuredArticle['image_legende'])?$featuredArticle['image_legende']:'Image à la une' ?>"
                     width="1600"
                     height="900"
                     fetchpriority="high"
@@ -244,7 +244,7 @@ function resolveImageUrl(?string $url, string $fallback): string
                 <h2 class="text-xl font-black uppercase tracking-tight mb-5">Dernières actualités</h2>
 
                 <?php if (empty($recentArticles)): ?>
-                    <p class="text-slate-500 text-sm">Aucun article disponible pour le filtre actuel.</p>
+                    <p class="text-slate-500 text-sm">Aucun autre article recent disponible pour le filtre actuel.</p>
                 <?php else: ?>
                     <div class="grid sm:grid-cols-2 xl:grid-cols-3 gap-4">
                         <?php foreach ($recentArticles as $article): ?>
@@ -254,7 +254,7 @@ function resolveImageUrl(?string $url, string $fallback): string
                             <article class="border border-slate-100 rounded-xl overflow-hidden bg-white hover:shadow-md transition-shadow group">
                                 <img
                                     src="<?= htmlspecialchars($cardImage) ?>"
-                                    alt="Miniature article"
+                                    alt="<?= !empty($article['image_legende'])?$article['image_legende']:'Image article recente' ?>"
                                     width="900"
                                     height="600"
                                     loading="lazy"
