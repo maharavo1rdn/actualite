@@ -145,14 +145,10 @@ function sourceBadgeClass(string $type): string
 
                 <div class="p-6">
                     <label class="block text-sm font-medium text-gray-700 mb-2">
-                        Titre <span class="mono text-xs text-red-400 font-normal ml-1">*</span>
+                        Titre <span class="mono text-xs text-red-400 font-normal ml-1">* HTML accepté</span>
                     </label>
-                    <input type="text" name="titre" id="titreInput" required
-                            stripped="<?= strip_tags($article['titre'] ?? '') ?>"
-                           value="<?= htmlspecialchars($article['titre'] ?? '<h1>Nouveau titre</h1>') ?>"
-                           placeholder="Titre de l'article…"
-                           oninput="updateSlugPreview(this.stripped)"
-                           class="w-full mono text-sm px-3.5 py-2.5 border border-gray-200 rounded-lg bg-gray-50 focus:bg-white focus:border-gray-400 focus:outline-none transition-colors">
+                    <textarea name="titre" id="titreInput" rows="3" required
+                              class="tinymce-editor-sm w-full mono text-sm px-3.5 py-2.5 border border-gray-200 rounded-lg bg-gray-50 focus:bg-white focus:border-gray-400 focus:outline-none transition-colors resize-none"><?= $article['titre'] ?? '<h1>Nouveau titre</h1>' ?></textarea>
                     <p class="mono text-xs text-gray-400 mt-2" id="slugPreview">
                         /article/<?= htmlspecialchars($article['slug'] ?? '…') ?>.html
                     </p>
@@ -451,6 +447,30 @@ tinymce.init({
     file_picker_types: 'image',
 });
 
+// Éditeur compact — pour le titre
+tinymce.init({
+    selector: 'textarea.tinymce-editor-sm',
+    license_key: 'gpl',
+    // language: 'fr_FR',
+    height: 180,
+    menubar: false,
+    branding: false,
+    plugins: ['link', 'code'],
+    toolbar:
+        'undo redo | blocks | ' +
+        'bold italic underline | forecolor | link | code',
+    content_style: "body { font-family: 'Geist', sans-serif; font-size: 15px; font-weight: 600; padding: 6px; }",
+    setup: function(editor) {
+        const syncTitle = () => {
+            editor.save();
+            updateSlugPreviewFromHtml(editor.getContent());
+        };
+
+        editor.on('init', syncTitle);
+        editor.on('change keyup setcontent undo redo', syncTitle);
+    },
+});
+
 // ── Onglets ─────────────────────────────────────────────────────────────────
 function switchTab(name) {
     const allBtns  = document.querySelectorAll('.tab-btn');
@@ -473,8 +493,24 @@ function slugify(str) {
         .replace(/[^a-z0-9]+/g, '-')
         .replace(/^-+|-+$/g, '');
 }
+
+function stripHtml(html) {
+    const parser = new DOMParser();
+    const doc = parser.parseFromString(html, 'text/html');
+    return (doc.body.textContent || '').trim();
+}
+
 function updateSlugPreview(title) {
     document.getElementById('slugPreview').textContent = '/article/' + (slugify(title) || '…') + '.html';
+}
+
+function updateSlugPreviewFromHtml(html) {
+    updateSlugPreview(stripHtml(html));
+}
+
+const titreTextarea = document.getElementById('titreInput');
+if (titreTextarea) {
+    updateSlugPreviewFromHtml(titreTextarea.value || '');
 }
 
 // ── Modal ────────────────────────────────────────────────────────────────────

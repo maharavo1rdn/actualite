@@ -212,13 +212,6 @@ if ($queryString !== '') {
             </div>
         <?php endif; ?>
 
-        <!-- HTML hint -->
-        <div class="bg-amber-50 border border-amber-200 rounded-lg px-4 py-3 mb-7 mono text-sm text-amber-700">
-            Titre &amp; Description acceptent du HTML brut Tiny Docs —
-            <code class="bg-amber-100 px-1.5 py-0.5 rounded">&lt;h1&gt;</code>
-            <code class="bg-amber-100 px-1.5 py-0.5 rounded">&lt;p&gt;</code> etc.
-        </div>
-
         <!-- Flash -->
         <?php if ($flash): ?>
             <div class="mb-7 px-4 py-3 rounded-lg border mono text-sm
