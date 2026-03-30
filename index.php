@@ -244,7 +244,7 @@ function resolveImageUrl(?string $url, string $fallback): string
                 <h2 class="text-xl font-black uppercase tracking-tight mb-5">Dernières actualités</h2>
 
                 <?php if (empty($recentArticles)): ?>
-                    <p class="text-slate-500 text-sm">Aucun article disponible pour le filtre actuel.</p>
+                    <p class="text-slate-500 text-sm">Aucun autre article recent disponible pour le filtre actuel.</p>
                 <?php else: ?>
                     <div class="grid sm:grid-cols-2 xl:grid-cols-3 gap-4">
                         <?php foreach ($recentArticles as $article): ?>
