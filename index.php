@@ -106,6 +106,12 @@ function excerptFromHtml(string $html, int $length = 150): string
     if (strlen($text) <= $length) return $text;
     return rtrim(substr($text, 0, $length)) . '...';
 }
+
+function resolveImageUrl(?string $url, string $fallback): string
+{
+    $candidate = trim((string)$url);
+    return $candidate !== '' ? $candidate : $fallback;
+}
 ?>
 <!DOCTYPE html>
 <html lang="fr">
@@ -114,6 +120,12 @@ function excerptFromHtml(string $html, int $length = 150): string
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Info Iran — Actualités</title>
     <meta name="description" content="Suivez l'actualité Info Iran : analyses, chronologie des événements, articles récents et sources vérifiées en continu.">
+    <?php if ($featuredArticle): ?>
+        <?php
+        $featuredPreloadImage = resolveImageUrl($featuredArticle['image_url'] ?? null, '/assets/images/photo-1504711434969-e33886168f5c.jpeg');
+        ?>
+        <link rel="preload" as="image" href="<?= htmlspecialchars($featuredPreloadImage) ?>" fetchpriority="high">
+    <?php endif; ?>
     
     <!-- 1. OPTIMISATION GOOGLE FONTS -->
     <!-- Préconnexion aux serveurs -->
@@ -193,9 +205,12 @@ function excerptFromHtml(string $html, int $length = 150): string
 
         <!-- Featured -->
         <?php if ($featuredArticle): ?>
+            <?php
+            $featuredImage = resolveImageUrl($featuredArticle['image_url'] ?? null, '/assets/images/photo-1504711434969-e33886168f5c.jpeg');
+            ?>
             <section class="relative overflow-hidden rounded-2xl mb-7 min-h-[22rem] flex items-end">
                 <img
-                    src="<?= htmlspecialchars($featuredArticle['image_url'] ?? 'https://images.unsplash.com/photo-1504711434969-e33886168f5c?auto=format&fit=crop&w=1600&q=80') ?>"
+                    src="<?= htmlspecialchars($featuredImage) ?>"
                     alt="Image à la une"
                     width="1600"
                     height="900"
@@ -233,9 +248,12 @@ function excerptFromHtml(string $html, int $length = 150): string
                 <?php else: ?>
                     <div class="grid sm:grid-cols-2 xl:grid-cols-3 gap-4">
                         <?php foreach ($recentArticles as $article): ?>
+                            <?php
+                            $cardImage = resolveImageUrl($article['image_url'] ?? null, '/assets/images/photo-1504711434969-e33886168f5c.jpeg');
+                            ?>
                             <article class="border border-slate-100 rounded-xl overflow-hidden bg-white hover:shadow-md transition-shadow group">
                                 <img
-                                    src="<?= htmlspecialchars($article['image_url'] ?? 'https://images.unsplash.com/photo-1585829365295-ab7cd400c167?auto=format&fit=crop&w=900&q=80') ?>"
+                                    src="<?= htmlspecialchars($cardImage) ?>"
                                     alt="Miniature article"
                                     width="900"
                                     height="600"

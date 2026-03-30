@@ -50,14 +50,14 @@ INSERT INTO articles (titre, slug, contenu, date_publication, id_categorie) VALU
 
 -- Images des articles
 INSERT INTO articles_images (id_article, url_image, legende) VALUES
-(1, 'https://images.unsplash.com/photo-1541872703-74c5e44368f9?auto=format&fit=crop&w=1400&q=80', 'Navires militaires dans le Golfe a la tombee du jour'),
-(2, 'https://images.unsplash.com/photo-1495020689067-958852a7765e?auto=format&fit=crop&w=1400&q=80', 'Equipe medicale mobile sur un point de passage frontalier'),
-(3, 'https://images.unsplash.com/photo-1504711434969-e33886168f5c?auto=format&fit=crop&w=1400&q=80', 'Convoi commercial escorté dans un couloir maritime'),
-(4, 'https://images.unsplash.com/photo-1569025743873-ea3a9ade89f9?auto=format&fit=crop&w=1400&q=80', 'Ecrans de suivi des prix de l energie'),
-(5, 'https://images.unsplash.com/photo-1454165804606-c3d57bc86b40?auto=format&fit=crop&w=1400&q=80', 'Brief diplomatique avec representants internationaux'),
-(6, 'https://images.unsplash.com/photo-1586528116311-ad8dd3c8310d?auto=format&fit=crop&w=1400&q=80', 'Vue aerienne d un terminal portuaire actif'),
-(7, 'https://images.unsplash.com/photo-1469571486292-b53601020f90?auto=format&fit=crop&w=1400&q=80', 'Distribution de kits de premiere necessite'),
-(8, 'https://images.unsplash.com/photo-1500375592092-40eb2168fd21?auto=format&fit=crop&w=1400&q=80', 'Mer agitee et conditions de navigation degradees');
+(1, '/assets/images/photo-1541872703-74c5e44368f9.jpeg', 'Navires militaires dans le Golfe a la tombee du jour'),
+(2, '/assets/images/photo-1495020689067-958852a7765e.jpeg', 'Equipe medicale mobile sur un point de passage frontalier'),
+(3, '/assets/images/photo-1504711434969-e33886168f5c.jpeg', 'Convoi commercial escorté dans un couloir maritime'),
+(4, '/assets/images/photo-1569025743873-ea3a9ade89f9.jpeg', 'Ecrans de suivi des prix de l energie'),
+(5, '/assets/images/photo-1454165804606-c3d57bc86b40.jpeg', 'Brief diplomatique avec representants internationaux'),
+(6, '/assets/images/photo-1586528116311-ad8dd3c8310d.jpeg', 'Vue aerienne d un terminal portuaire actif'),
+(7, '/assets/images/photo-1469571486292-b53601020f90.jpeg', 'Distribution de kits de premiere necessite'),
+(8, '/assets/images/photo-1500375592092-40eb2168fd21.jpeg', 'Mer agitee et conditions de navigation degradees');
 
 -- Liens articles-sources
 INSERT INTO article_sources (id_article, id_source) VALUES
