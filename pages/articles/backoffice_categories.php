@@ -67,9 +67,9 @@ function buildCategoryPagerUrl(int $p): string
 
 <header class="bg-black text-white sticky top-0 z-10">
     <div class="container mx-auto px-6 h-14 flex items-center justify-between gap-4">
-        <span class="mono text-sm tracking-tight">Info Iran / <span class="text-gray-400">categories</span></span>
+        <span class="mono text-sm tracking-tight">Info Iran / <span class="text-gray-400">Categories</span></span>
         <div class="flex items-center gap-4">
-            <a href="/backoffice/articles" class="mono text-sm hover:text-gray-300 transition-colors">articles</a>
+            <a href="/backoffice/articles" class="mono text-sm hover:text-gray-300 transition-colors">Articles</a>
             <a href="/backoffice/sources" class="mono text-sm hover:text-gray-300 transition-colors">Sources</a>
             <a href="/backoffice/chronologie" class="mono text-sm hover:text-gray-300 transition-colors">Chronologie</a>
             <a href="/backoffice/types-sources" class="mono text-sm hover:text-gray-300 transition-colors">Types sources</a>

@@ -69,7 +69,7 @@ function sourceBadge(string $type): string
     <header class="bg-slate-950 text-white sticky top-0 z-50 border-b border-slate-800">
         <div class="max-w-7xl mx-auto px-5 h-14 flex items-center justify-between gap-4">
             <a href="/" class="font-black tracking-tight text-xl">Info <span class="text-red-500">Iran</span></a>
-            <a href="/" class="mono text-sm text-slate-400 hover:text-white transition-colors">← accueil</a>
+            <a href="/" class="mono text-sm text-slate-400 hover:text-white transition-colors">← Accueil</a>
         </div>
     </header>
 

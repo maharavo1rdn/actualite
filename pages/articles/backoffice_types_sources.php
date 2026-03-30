@@ -76,7 +76,7 @@ function buildTypeSourcePagerUrl(int $p): string
             <a href="/backoffice/utilisateurs" class="mono text-sm hover:text-gray-300 transition-colors">Utilisateurs</a>
             <a href="/" target="_blank" class="mono text-sm bg-gray-800 hover:bg-gray-700 px-3 py-1.5 rounded transition-colors">↗ Front</a>
             <span class="mono text-sm text-gray-500"><?= $username ?></span>
-            <a href="/deconnexion" class="mono text-sm text-red-400 hover:text-red-300 transition-colors">déconnexion</a>
+            <a href="/deconnexion" class="mono text-sm text-red-400 hover:text-red-300 transition-colors">Déconnexion</a>
         </div>
     </div>
 </header>

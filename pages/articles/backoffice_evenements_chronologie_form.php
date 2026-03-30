@@ -74,10 +74,10 @@ if ($selectedArticleId > 0) {
                 Info Actualite / <a href="/backoffice/chronologie" class="text-gray-400 hover:text-white transition-colors">Chronologie</a> / <span class="text-white"><?= $eventToEdit ? 'modifier' : 'ajouter' ?></span>
             </span>
             <div class="flex items-center gap-4">
-                <a href="/backoffice" class="mono text-sm bg-gray-800 hover:bg-gray-700 px-3 py-1.5 rounded transition-colors">← articles</a>
+                <a href="/backoffice" class="mono text-sm bg-gray-800 hover:bg-gray-700 px-3 py-1.5 rounded transition-colors">← Articles</a>
                 <a href="<?= htmlspecialchars($backToListUrl) ?>" class="mono text-sm bg-gray-800 hover:bg-gray-700 px-3 py-1.5 rounded transition-colors">← événements</a>
                 <span class="mono text-sm text-gray-500"><?= $username ?></span>
-                <a href="/deconnexion" class="mono text-sm text-red-400 hover:text-red-300 transition-colors">déconnexion</a>
+                <a href="/deconnexion" class="mono text-sm text-red-400 hover:text-red-300 transition-colors">Déconnexion</a>
             </div>
         </div>
     </header>
