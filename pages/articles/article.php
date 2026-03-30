@@ -117,7 +117,7 @@ function excerptForMeta(string $html, int $length = 160): string
                 decoding="async"
                 class="w-full h-64 md:h-[28rem] object-cover">
             <?php if (!empty($primaryImage['legende'])): ?>
-                <p class="px-6 py-3 mono text-xs text-slate-500 bg-slate-50 border-t border-slate-200">
+                <p class="px-6 py-3 mono text-xs text-slate-600 bg-slate-50 border-t border-slate-200">
                     <?= htmlspecialchars($primaryImage['legende']) ?>
                 </p>
             <?php endif; ?>
@@ -134,19 +134,19 @@ function excerptForMeta(string $html, int $length = 160): string
             </article>
 
             <!-- Timeline sidebar -->
-            <aside class="bg-slate-950 text-slate-100 rounded-2xl border border-slate-800 p-6 h-fit">
+            <aside class="bg-slate-950 text-slate-50 rounded-2xl border border-slate-800 p-6 h-fit">
                 <h2 class="text-sm font-black uppercase tracking-widest mb-5 flex items-center gap-2">
                     <span class="inline-block w-2 h-2 rounded-full bg-red-500 animate-pulse"></span>
                     Dans le même temps
                 </h2>
 
                 <?php if (empty($timeline)): ?>
-                    <p class="text-sm text-slate-500">Aucun événement le même jour.</p>
+                    <p class="text-sm text-slate-300">Aucun événement le même jour.</p>
                 <?php else: ?>
                     <div class="space-y-5">
                         <?php foreach ($timeline as $event): ?>
                             <article class="border-l-2 border-red-600 pl-3.5">
-                                <p class="mono text-xs text-slate-500 mb-1">
+                                <p class="mono text-xs text-slate-300 mb-1">
                                     <?= htmlspecialchars(date('H:i', strtotime($event['date_evenement']))) ?>
                                 </p>
                                 <div class="text-sm text-slate-200 leading-snug">
@@ -172,7 +172,7 @@ function excerptForMeta(string $html, int $length = 160): string
             </h2>
 
             <?php if (empty($sources)): ?>
-                <p class="text-sm text-slate-500">Aucune source associée à cet article.</p>
+                <p class="text-sm text-slate-600">Aucune source associée à cet article.</p>
             <?php else: ?>
                 <div class="space-y-3">
                     <?php foreach ($sources as $source): ?>
