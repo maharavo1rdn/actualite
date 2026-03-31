@@ -62,7 +62,8 @@ $liveEvents      = $articleService->getLiveEvents(10);
 $categoryColors = [
     'Geopolitique' => 'bg-red-700',
     'Humanitaire'  => 'bg-emerald-700',
-    'Economie'     => 'bg-amber-600',
+    // FIX 1: bg-amber-600 → bg-amber-800 (contrast ratio ~5.9:1 vs ~2.5:1)
+    'Economie'     => 'bg-amber-800',
     'Climat'       => 'bg-cyan-700',
 ];
 
@@ -126,25 +127,17 @@ function resolveImageUrl(?string $url, string $fallback): string
         ?>
         <link rel="preload" as="image" href="<?= htmlspecialchars($featuredPreloadImage) ?>" fetchpriority="high">
     <?php endif; ?>
-    
-    <!-- 1. OPTIMISATION GOOGLE FONTS -->
-    <!-- Préconnexion aux serveurs -->
+
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    
-    <!-- Préchargement et chargement asynchrone pour ne pas bloquer le rendu -->
     <link rel="preload" as="style" href="https://fonts.googleapis.com/css2?family=Geist:wght@400;500;600;700;800;900&family=Geist+Mono:wght@400;500&display=swap">
     <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Geist:wght@400;500;600;700;800;900&family=Geist+Mono:wght@400;500&display=swap" media="print" onload="this.media='all'">
-    
-    <!-- Fallback si le JavaScript est désactivé -->
     <noscript>
         <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Geist:wght@400;500;600;700;800;900&family=Geist+Mono:wght@400;500&display=swap">
     </noscript>
 
-    <!-- 2. OPTIMISATION CSS LOCAL -->
-    <!-- L'inlining du CSS supprime totalement la requête réseau bloquante -->
     <style>
-        <?php 
+        <?php
         $cssPath = __DIR__ . '/assets/css/app.min.css';
         if (file_exists($cssPath)) {
             echo file_get_contents($cssPath);
@@ -152,6 +145,21 @@ function resolveImageUrl(?string $url, string $fallback): string
         ?>
         body { font-family: 'Geist', sans-serif; }
         .mono { font-family: 'Geist Mono', monospace; }
+
+        .article-card-img {
+            will-change: transform;
+            transform: translateZ(0); /* force own compositing layer */
+        }
+        .live-dot {
+            will-change: opacity;
+        }
+        .deferred-section {
+            content-visibility: auto;
+            contain-intrinsic-size: 0 600px;
+        }
+        .cards-grid {
+            contain: layout style;
+        }
     </style>
 </head>
 <body class="bg-slate-100 text-slate-900">
@@ -203,7 +211,7 @@ function resolveImageUrl(?string $url, string $fallback): string
     <!-- ── MAIN ─────────────────────────────── -->
     <main class="max-w-7xl mx-auto px-5 py-7">
 
-        <!-- Featured -->
+        <!-- Featured (above the fold — no deferral) -->
         <?php if ($featuredArticle): ?>
             <?php
             $featuredImage = resolveImageUrl($featuredArticle['image_url'] ?? null, '/assets/images/photo-1504711434969-e33886168f5c.jpeg');
@@ -211,7 +219,7 @@ function resolveImageUrl(?string $url, string $fallback): string
             <section class="relative overflow-hidden rounded-2xl mb-7 min-h-[22rem] flex items-end">
                 <img
                     src="<?= htmlspecialchars($featuredImage) ?>"
-                    alt="<?= !empty($featuredArticle['image_legende'])?$featuredArticle['image_legende']:'Image à la une' ?>"
+                    alt="<?= !empty($featuredArticle['image_legende']) ? htmlspecialchars($featuredArticle['image_legende']) : 'Image à la une' ?>"
                     width="1600"
                     height="900"
                     fetchpriority="high"
@@ -237,16 +245,18 @@ function resolveImageUrl(?string $url, string $fallback): string
             </section>
         <?php endif; ?>
 
-        <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+        <!-- deferred-section: browser skips rendering cost until near viewport -->
+        <div class="grid grid-cols-1 lg:grid-cols-3 gap-6 deferred-section">
 
             <!-- Articles grid -->
             <section class="lg:col-span-2 bg-white border border-slate-200 rounded-2xl p-6">
                 <h2 class="text-xl font-black uppercase tracking-tight mb-5">Dernières actualités</h2>
 
                 <?php if (empty($recentArticles)): ?>
-                    <p class="text-slate-500 text-sm">Aucun autre article recent disponible pour le filtre actuel.</p>
+                    <p class="text-slate-500 text-sm">Aucun autre article récent disponible pour le filtre actuel.</p>
                 <?php else: ?>
-                    <div class="grid sm:grid-cols-2 xl:grid-cols-3 gap-4">
+                    <!-- cards-grid: contain:layout style limits recalc scope -->
+                    <div class="cards-grid grid sm:grid-cols-2 xl:grid-cols-3 gap-4">
                         <?php foreach ($recentArticles as $article): ?>
                             <?php
                             $cardImage = resolveImageUrl($article['image_url'] ?? null, '/assets/images/photo-1504711434969-e33886168f5c.jpeg');
@@ -254,13 +264,18 @@ function resolveImageUrl(?string $url, string $fallback): string
                             <article class="border border-slate-100 rounded-xl overflow-hidden bg-white hover:shadow-md transition-shadow group">
                                 <img
                                     src="<?= htmlspecialchars($cardImage) ?>"
-                                    alt="<?= !empty($article['image_legende'])?$article['image_legende']:'Image article recente' ?>"
+                                    alt="<?= !empty($article['image_legende']) ? htmlspecialchars($article['image_legende']) : 'Image article récent' ?>"
                                     width="900"
                                     height="600"
                                     loading="lazy"
                                     decoding="async"
-                                    class="w-full h-36 object-cover group-hover:scale-[1.02] transition-transform duration-300">
+                                    <!-- article-card-img: own compositor layer, hover scale stays off main thread -->
+                                    class="article-card-img w-full h-36 object-cover group-hover:scale-[1.02] transition-transform duration-300">
                                 <div class="p-4">
+                                    <!--
+                                        FIX 1 applied: bg-amber-600 replaced by bg-amber-800 in $categoryColors above.
+                                        All badges now inherit the corrected class from categoryBadgeClass().
+                                    -->
                                     <span class="inline-block text-[11px] uppercase font-bold px-2 py-0.5 rounded text-white mb-2 <?= categoryBadgeClass($categoryColors, $article['categorie_nom'] ?? 'Actualité') ?>">
                                         <?= htmlspecialchars($article['categorie_nom'] ?? 'Actualité') ?>
                                     </span>
@@ -281,7 +296,8 @@ function resolveImageUrl(?string $url, string $fallback): string
             <!-- Live sidebar -->
             <aside class="bg-slate-950 text-slate-50 rounded-2xl p-6 border border-slate-800">
                 <h2 class="text-base font-black uppercase tracking-widest mb-5 flex items-center gap-2">
-                    <span class="inline-block w-2 h-2 rounded-full bg-red-500 animate-pulse"></span>
+                    <!-- live-dot: will-change:opacity keeps pulse animation on compositor thread -->
+                    <span class="live-dot inline-block w-2 h-2 rounded-full bg-red-500 animate-pulse"></span>
                     Fil du direct
                 </h2>
                 <?php if (empty($liveEvents)): ?>
