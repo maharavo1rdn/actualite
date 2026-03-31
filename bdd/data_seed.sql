@@ -56,7 +56,7 @@ INSERT INTO articles_images (id_article, url_image, legende) VALUES
 (4, '/assets/images/photo-1569025743873-ea3a9ade89f9.jpeg', 'Ecrans de suivi des prix de l energie'),
 (5, '/assets/images/photo-1454165804606-c3d57bc86b40.jpeg', 'Brief diplomatique avec representants internationaux'),
 (6, '/assets/images/photo-1586528116311-ad8dd3c8310d.jpeg', 'Vue aerienne d un terminal portuaire actif'),
-(7, '/assets/images/photo-1469571486292-b53601020f90.jpeg', 'Distribution de kits de premiere necessite'),
+(7, '/assets/images/photo-1469571486292-b53601020f90.jpg', 'Distribution de kits de premiere necessite'),
 (8, '/assets/images/photo-1500375592092-40eb2168fd21.jpeg', 'Mer agitee et conditions de navigation degradees');
 
 -- Liens articles-sources
