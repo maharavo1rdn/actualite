@@ -63,7 +63,7 @@ $categoryColors = [
     'Geopolitique' => 'bg-red-700',
     'Humanitaire'  => 'bg-emerald-700',
     // FIX 1: bg-amber-600 → bg-amber-800 (contrast ratio ~5.9:1 vs ~2.5:1)
-    'Economie'     => 'bg-amber-800',
+    'Economie' => 'bg-amber-700',
     'Climat'       => 'bg-cyan-700',
 ];
 
