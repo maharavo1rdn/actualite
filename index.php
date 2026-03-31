@@ -269,7 +269,6 @@ function resolveImageUrl(?string $url, string $fallback): string
                                     height="600"
                                     loading="lazy"
                                     decoding="async"
-                                    <!-- article-card-img: own compositor layer, hover scale stays off main thread -->
                                     class="article-card-img w-full h-36 object-cover group-hover:scale-[1.02] transition-transform duration-300">
                                 <div class="p-4">
                                     <!--
